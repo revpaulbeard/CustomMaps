@@ -1,4 +1,5 @@
 CustomMaps
+
 A combination of tools to make custom Google Maps by Paul Beard
 
 I am a former professional Analyst/Programmer who writes JavaScript like VB6 and VB6 like COBOL!
