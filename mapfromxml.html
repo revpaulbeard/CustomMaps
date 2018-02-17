@@ -1,0 +1,2482 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 STRICT//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" style="height:100%; width:100%; margin:0px; " >
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8;"/>
+    <meta http-equiv="X-UA-Compatible"  /> 
+      <style>
+          v\: * {
+              behavior: url(#default#VML);
+              display: inline-block
+          }
+      </style>
+    <title>Church Records Map</title>
+    <script src="https://maps.googleapis.com/maps/api/js?v=3&key="ABQIAAAA3UaTciXYfKNink2cghRhnxQb2HQRwdq2tpfkpCOkCKjbZIaAZRTWP3Ca8PJW-rPGCZtTAOW6MvSRYg"></script>
+
+
+<style type="text/css">
+ p {margin:.5em 0 .5em 0}
+</style>
+
+<script src="markerwithlabel.js"></script>
+
+<style type="text/css">
+
+.htmlControl
+{
+
+  /* Set CSS for thecontrol border.
+  background-color: white;
+  border-style: solid;
+  border-width: 1px;
+  cursor: default;
+  text-align: center;
+	
+
+  /* Set CSS for the control interior. */
+  font-Family: Arial,sans-serif;
+  font-size: 9pt;
+  padding-Left: 2px;
+  padding-Right: 2px;
+
+}
+.htmlButton
+{
+  background-color: white;
+  border:solid black 1px;
+  padding-top: 1px;
+  padding-right: 4px;
+  padding-bottom: 1px;
+  padding-left: 4px;
+
+  font-size: 12pt;
+}
+
+.htmlOther
+{
+  background-color: white;
+  border:none;
+  padding-top: 1px;
+  padding-right: 4px;
+  padding-bottom: 1px;
+  padding-left: 4px;
+
+  font-size: 12pt;
+
+}
+
+    /* Override Google Maps Icon style */
+/*    .adp-substep .adp-stepicon .adp-maneuver {position: static;} */
+</style>
+
+
+
+<style type="text/css">
+    textarea
+    {
+        border:1px solid #999999;
+        padding:1%;
+    }
+</style>
+ 
+<style>
+a.closeX {
+    position: absolute;
+    right: 0px; top: 0px; width:20px;
+    background-color: #FFF; color: black;
+    margin-top:-15px; margin-right:-15px; border-radius: 20px;
+    padding-left: 3px; padding-top: 1px;
+    cursor:pointer; z-index: -1;
+    font-size:16px; font-weight:bold;
+}
+</style>
+
+
+<style>
+  #panel 
+  {
+  position: absolute;
+  top: 5px;
+  left: 50%;
+  margin-left: -180px;
+  z-index: 5;
+  background-color: #fff;
+  padding: 5px;
+  border: 1px solid #999;
+  }
+</style>
+
+<style>
+  #directions-panel 
+  {
+  height: 100%;
+  float: right;
+  width: 390px;
+  overflow: auto;
+  }
+
+  @media print 
+  {
+    #map-canvas 
+    {
+    height: 500px;
+    margin: 0;
+    }
+
+    #directions-panel 
+    {
+    float: none;
+    width: auto;
+    }
+  }
+</style>
+
+ <style type="text/css">
+   .labels {
+     font-family: "Arial", "Arial", sans-serif;
+     font-size: 16px;
+     font-weight: bold;
+     text-align: center; 
+     white-space: nowrap;
+     border-style: none;
+     opacity: 1.0;
+     fill-opacity: 0;
+   }
+ </style>
+
+<script type="text/javascript">
+
+function which_browser()
+{
+/**
+* @returns A string which specifies which is the current 
+* browser in which we are running. 
+* 
+* Currently-supported browser detection and codes: 
+* * 'opera' -- Opera 
+* * 'msie' -- Internet Explorer 
+* * 'safari' -- Safari 
+* * 'firefox' -- FireFox 
+* * 'mozilla' -- Mozilla 
+* 
+* If we are unable to property identify the browser, we 
+* return an empty string. 
+* 
+* @type String 
+*/ 
+
+var browserName = ""; 
+
+var ua = navigator.userAgent.toLowerCase(); 
+
+if ( ua.indexOf( "opera" ) != -1 ) { browserName = "opera"; } 
+else if ( ua.indexOf( "msie" ) != -1 ) { browserName = "msie"; } 
+else if ( ua.indexOf( "safari" ) != -1 ) { browserName = "safari"; } 
+else if ( ua.indexOf( "chrome" ) != -1 ) { browserName = "chrome" ; } 
+else if ( ua.indexOf( "edge" ) != -1 ) { browserName = "edge"; } 
+else if ( ua.indexOf( "mozilla" ) != -1 ) 
+	{ 
+
+	if ( ua.indexOf( "firefox" ) != -1 ) 
+		{ browserName = "firefox"; } 
+	else 
+	{ browserName = "mozilla"; } 
+
+} 
+
+return browserName ;
+
+}
+
+
+</script>
+
+<script src="Map.js"></script>
+
+<script type="text/javascript">
+
+
+    var _mSvgForced = true;
+    var _mSvgEnabled = true;
+
+
+    var xmlDoc = null;
+    var map = null;
+    var e = null;
+    var zoomctl = null;
+    var scalectl = null;
+    var typectl = null;
+
+    var infowindow = new google.maps.InfoWindow({
+              content: ""
+            , maxWidth: 300
+    });
+
+    var geocoder = null;
+    var directionsDisplay;
+    var directionsService = new google.maps.DirectionsService();
+    var baseloc = "Buckingham Palace";
+    var baselatlng = new google.maps.LatLng(51.501504, -0.141916);
+    var basedefaultloc = "Buckingham Palace";
+    var basedefaultlatlng = new google.maps.LatLng(51.501504, -0.141916);
+    var basemarker = null;
+    var endlatlng = new google.maps.LatLng(51.501504, -0.141916);
+    var BuckHouselatlng = new google.maps.LatLng(51.501504, -0.141916);
+
+    var strAlert="";
+    var latDecPlaces = 4;
+    var lngDecPlaces = 5;
+
+    var duffAddresses = [];
+    var goodAddresses = [];
+
+    var awaitingLatLngInd = [];
+    var awaitingLatLngAddr= [];
+
+    var gMarkersA = [];
+    var gPolygonsA = [];
+    var xmlPolygons = [];
+    var xmlEntries;
+    var sb =[];
+    var sba = [];
+    var sbs = [];
+    var sbm = [];
+    var sbKeys = [];
+    var sbXRef = [];
+    var mkrPosA = [];
+    var mkrIconDets = [];
+    var grpIconDets = [];
+    var sbIconDets = [];
+    var grpVisi = [];
+    var maxLabelDigits = 1;
+    var Xrefsofar = 0;
+    var awaitingLatLngCount = 0;
+    var marker = null;
+    var sbhtml='';
+    var sbahtml='';
+    var sbshtml = '';
+    var sbmhtml = '';
+    var bounds ;
+    var mapsize;
+    var cenpos = null;
+    var zoomlevel = null;
+
+
+    var initzoom = "auto";
+    var headsbwd = "20%";
+    var sbwd = "0px" ;
+    var iconscale = 50;
+    var iconnumbers = "Y";
+    var showpolys = "Y";
+    var shadows = "Y";
+    var sborder = "X";
+    var maptype = "G_NORMAL_MAP";
+    var forwhat = "N";
+    var polytriglv = 9;
+    var defaultSVGPath = "Square";
+    var defaultforecolor = "#FFFFFF"
+    var defaultbackcolor = "#000000"
+    var noshide ;
+    var polyshide ;
+    var sbnum ;
+
+function load() 
+      {
+
+	fit_map_to_window();
+
+	geocoder = new google.maps.Geocoder();
+
+	var initlatlng = new google.maps.LatLng(53,0);
+  	var mapOptions = 
+	{
+	zoom: 10,
+	center: new google.maps.LatLng(-37.92, 151.25),
+    	mapTypeControlOptions: {
+        style: google.maps.MapTypeControlStyle.HORIZONTAL_BAR,
+        position: google.maps.ControlPosition.TOP_CENTER},
+	mapTypeId: google.maps.MapTypeId.ROADMAP
+  	}
+
+	map = new google.maps.Map(document.getElementById("map_canvas"), mapOptions );
+
+	toggle_all_map_Controls( true );
+
+   	var rendererOptions = 	{
+		map: map,
+      		suppressMarkers: true
+    	}
+	directionsDisplay = new google.maps.DirectionsRenderer(rendererOptions);
+  	directionsDisplay.setPanel(document.getElementById('directions-panel'));
+
+	if  (window.addEventListener)
+		{ window.addEventListener("resize", function() { fit_map_to_window(); } , false); }
+
+    fname = get_xml_filename();
+    if (fname == "Map.xml")
+    {
+        js_script = document.createElement('script');
+        js_script.type = "text/javascript";
+        js_script.src = "Map.js";
+        document.getElementsByTagName('head')[0].appendChild(js_script);
+        parseDoc(jsXML);
+    }
+    else
+        { readxmldata(); }
+
+    }
+
+ 
+function myFitBounds(myMap, bounds) 
+	{
+        myMap.fitBounds(bounds);
+
+        var overlayHelper = new google.maps.OverlayView();
+        overlayHelper.draw = function () {
+            if (!this.ready) {
+                var projection = this.getProjection(),
+                    zoom = getExtraZoom(projection, bounds, myMap.getBounds());
+                if (zoom > 0) {
+                    myMap.setZoom(myMap.getZoom() + zoom);
+                }
+                this.ready = true;
+                google.maps.event.trigger(this, 'ready');
+            }
+        };
+        overlayHelper.setMap(myMap);
+    }
+
+
+
+    // LatLngBounds b1, b2 -> zoom increment
+function getExtraZoom(projection, expectedBounds, actualBounds) 
+	{
+        var expectedSize = getSizeInPixels(projection, expectedBounds),
+            actualSize = getSizeInPixels(projection, actualBounds);
+
+        if (Math.floor(expectedSize.x) == 0 || Math.floor(expectedSize.y) == 0) 
+		{ return 0; }
+
+        var qx = actualSize.x / expectedSize.x;
+        var qy = actualSize.y / expectedSize.y;
+        var min = Math.min(qx, qy);
+
+        if (min < 1) 
+		{ return 0; }
+
+        return Math.floor(Math.log(min) / Math.log(2) /* = log2(min) */);
+	}
+
+
+
+    // LatLngBounds bnds -> height and width as a Point
+function getSizeInPixels(projection, bounds) 
+	{
+        var sw = projection.fromLatLngToContainerPixel(bounds.getSouthWest());
+        var ne = projection.fromLatLngToContainerPixel(bounds.getNorthEast());
+        return new google.maps.Point(Math.abs(sw.y - ne.y), Math.abs(sw.x - ne.x));
+	}
+
+
+function fit_map_to_window()
+	{
+
+	var sbcolwd=0;
+	
+	if ( forwhat != "print" )
+	    { sbcolwd = parseFloat(sbwd); }
+
+	if (sbcolwd==0)
+	    {document.getElementById("sbcol").style.display = "none";}
+	else
+	    {
+	    if (sbcolwd > 75)
+		{sbcolwidth = 75; sbwd="75%";}
+	    document.getElementById("sbcol").style.display = "block";
+	    document.getElementById("mapcell").style.width = (100 - sbcolwd) + "%";
+	    }
+
+	if(which_browser() == "msie" )
+    	    { document.getElementById("side_bar").style.height = "100%"; }
+	else
+    	    { document.getElementById("side_bar").style.height = (window.innerHeight - 16) + "px"; }
+
+	}
+
+
+function redraw_map()
+	{
+
+	fit_map_to_window();
+
+	if (xmlPolygons.length > 0 && showpolys == "Y")
+	    { 
+	    set_polygons();
+	    }
+
+	if ( forwhat != "print" )
+	    {
+	     toggle_all_map_Controls(true);
+	    }
+	else
+	    { 
+	    toggle_all_map_Controls(false);
+	    }
+
+	}
+
+
+    function refresh_markers()
+	{
+	    var tmpzoom = map.getZoom();
+        var mkrIndex;
+        var sbXi;
+        var sbXParts = [];
+        var sbIParts = [];
+        var newVisi = false;
+
+        if (showpolys == "Y" && xmlPolygons.length > 0 && tmpzoom <= 8)
+        {
+            for (mkrIndex = 0; mkrIndex < gMarkersA.length; mkrIndex++) 
+            { gMarkersA[mkrIndex].setVisible(false);}
+        }
+        else
+        {
+
+            sbXi = 0
+            sbXParts = sbXRef[0].split("~");
+            mkrIndex = +sbXParts[0];
+            newVisi = false;
+            do {
+                sbXParts = sbXRef[sbXi].split("~");
+
+                if ( +sbXParts[0] != mkrIndex )
+                {
+                    if (gMarkersA[mkrIndex].getVisible() || newVisi != gMarkersA[mkrIndex].getVisible() && newVisi)
+                        { gMarkersA[mkrIndex].setVisible(newVisi); }
+                    newVisi = false;
+                    mkrIndex = +sbXParts[0];
+                }
+                sbIParts = sbIconDets[+sbXParts[1]].split("~");
+                if (newVisi != true)
+                    { newVisi = grpVisi[+sbIParts[0]]; }
+//alert(mkrIndex + " is " + sbXRef[sbXi] + "=>" + sbXParts[1] + " is " + sbIconDets[+sbXParts[1]] + "  " + grpVisi[+sbIParts[0]] + " on " + newVisi);
+                sbXi++;
+            } while (sbXi < sbXRef.length);
+            if (gMarkersA[mkrIndex].getVisible() || newVisi != gMarkersA[mkrIndex].getVisible() && newVisi)
+                { gMarkersA[mkrIndex].setVisible(newVisi); }
+        }
+	}
+    
+
+function change_sidebar_width(interval)
+      {
+	
+	var newsbwd = 0 ;
+
+	if ( forwhat != "print" )
+	    { newsbwd = parseInt(sbwd) + interval ; }
+
+	if ( newsbwd <= 0 )
+	    { 
+	    newsbwd = 0;
+	    document.getElementById("sbcol").style.display = "none";
+	    }
+	else
+	    if ( document.getElementById("sbcol").style.display == "none" )
+	        { document.getElementById("sbcol").style.display = "block"; }
+	
+	sbwd = newsbwd + "%";
+
+	redraw_map();
+	document.getElementById("sbwd").innerHTML = sbwd ;
+
+	return;
+
+      }
+
+      
+function toggle_menu()
+      {
+
+	if ( document.getElementById('menuPanel').style.display == 'none')
+	    {
+	    document.getElementById('menuPanel').style.display = 'block' ;
+	    document.getElementById('menuButton').innerHTML='Hide menu';
+	    document.getElementById('menuPanel').style.zIndex = 2 ;
+	    }
+	else
+	    {
+	    document.getElementById('menuPanel').style.display = 'none' ;
+	    document.getElementById('menuButton').innerHTML='Show menu';
+	    }
+
+      }
+
+
+    function showAddressesFound() {
+        strAlert = goodAddresses.join("<BR><BR>").replace(/~/g, "<BR>");
+        document.getElementById("side_bar").innerHTML = "<strong>Addresses found</strong><BR>" + strAlert + "\n";
+        strAlert = "";
+    }
+
+
+
+    function showAddressesNotFound() {
+        strAlert = duffAddresses.join("<BR><BR>").replace(/~/g, "<BR>");
+        document.getElementById("side_bar").innerHTML = "<strong>Addresses NOT found</strong><BR>" + strAlert + "\n";
+        strAlert = "";
+    }
+    
+
+    function ShowAllAddresses(format) {
+        var i;
+        var sbParts = [];
+
+        for (i = 0; i < sb.length; i++)
+        {
+            switch (sborder)
+            {
+                case "N":
+                    sbParts = sb[i].split("|");
+                    break;
+                case "A":
+                    sbParts = sba[i].split("|");
+                    break;
+                case "S":
+                    sbParts = sbs[i].split("|");
+                    break;
+                case "M":
+                    sbParts = sbm[i].split("|");
+                    break;
+            }
+           
+            if (xmlEntries[+sbParts[1]].getAttribute("sbindex") < 0 )
+            {
+                if (sborder == "N")
+                    { strAlert += "<strong>" + sbParts[0] + "</strong><BR>"; }                
+            }
+            else
+            {
+                strAlert +=
+                    sbParts[0]
+                    + "<BR>"
+                    + xmlEntries[+sbParts[1]].getAttribute("address")
+                    ;
+
+                if ( +sbParts[2] >=0 ) {
+                    strAlert += "<BR>marker "
+                        + +sbParts[2]
+                        + "<BR>"
+                        + mkrPosA[+sbParts[2]]
+                        ;
+                    } 
+                    
+                strAlert += "<BR><BR>";
+            }
+        }
+        
+        document.getElementById("side_bar").innerHTML = "<strong>All Addresses</strong><BR>" + strAlert + "\n";
+        strAlert = "";
+    }
+
+
+    function set_sborder(newsborder)
+    {
+
+        switch (sborder) {
+            case "N":
+                document.getElementById("btnNatural").innerHTML =
+                    document.getElementById("btnNatural").innerHTML.replace("<strong>Natural</strong>", "Natural");
+                break;
+            case "A":
+                document.getElementById("btnAlpha").innerHTML =
+                    document.getElementById("btnAlpha").innerHTML.replace("<strong>Alpha</strong>", "Alpha");
+                break;
+            case "S":
+                document.getElementById("btnSort").innerHTML =
+                    document.getElementById("btnSort").innerHTML.replace("<strong>Sort</strong>", "Sort");
+                break;
+            case "M":
+                document.getElementById("btnMkr").innerHTML =
+                    document.getElementById("btnMkr").innerHTML.replace("<strong>Marker</strong>", "Marker");
+                break;
+
+        }
+
+        sborder = newsborder;
+
+        switch ( sborder )
+        {
+            case "N":
+                document.getElementById("side_bar").innerHTML = sbhtml;
+                document.getElementById("btnNatural").innerHTML = "<strong>Natural</strong>";
+                break;
+            case "A":
+                document.getElementById("side_bar").innerHTML = sbahtml;
+                document.getElementById("btnAlpha").innerHTML = "<strong>Alpha</strong>";
+                break;
+            case "S":
+                document.getElementById("side_bar").innerHTML = sbshtml;
+                document.getElementById("btnSort").innerHTML = "<strong>Sort</strong>";
+                break;
+            case "M":
+                document.getElementById("side_bar").innerHTML = sbmhtml;
+                document.getElementById("btnMkr").innerHTML = "<strong>Marker</strong>";
+                break;
+        }
+	}
+
+
+function toggle_polygons()
+      {
+
+	if ( showpolys == "Y" )
+		{ 
+		showpolys = "N";
+	        document.getElementById('polygonsbtn').innerHTML='<span style="font-weight:bold">'+'Show' +'</span> polygons';
+		}
+	else
+		{ 
+		showpolys = "Y"; 
+	    	document.getElementById('polygonsbtn').innerHTML='<span style="font-weight:bold">'+'Hide' +'</span> polygons';
+		}
+
+	set_polygons();
+
+	}
+
+
+function set_polygons()
+	{
+
+	    if ( showpolys == "Y" || parseInt(document.getElementById("zoomlv").innerHTML) < polytriglv  )
+	    {
+	        for (var i = 0; i < gPolygonsA.length; i++) 
+	     	    {gPolygonsA[i].setMap(map);}
+	    }
+	    else
+	    {
+	        for (var i = 0; i < gPolygonsA.length; i++) 
+	     	    {gPolygonsA[i].setMap(null);}
+	    }
+
+	    document.getElementById("showpolys").innerHTML = showpolys ;
+
+    }
+
+
+function toggle_icon_numbers()
+      {
+
+	if ( iconnumbers == "Y")
+	    { 
+		iconnumbers = "N";
+		document.getElementById('iconnumbersbtn').innerHTML = 
+			'<span style="font-weight:bold">'+'Show' +'</span> numbers in markers'; 
+	    }
+	else
+	    { 
+		iconnumbers = "Y";
+		document.getElementById('iconnumbersbtn').innerHTML = 
+			'<span style="font-weight:bold">'+'Hide' +'</span> numbers in markers';
+	    }
+
+	document.getElementById("iconnumbers").innerHTML = iconnumbers ;
+
+	set_icon_numbers();
+
+      }
+
+
+function select_Icon_size(selectedSize)
+	{
+	if ( selectedSize > 0 )
+		{ 
+		document.getElementById("iconscalein").value = selectedSize;
+		change_icon_number_size ( selectedSize ) 
+		}
+	}
+
+
+function change_icon_number_size ( newscale )
+     {
+
+	iconscale = parseFloat(newscale);
+
+	if (iconscale  < 10)
+		{ iconnumbers = "N" }
+
+	set_icon_numbers();
+
+	Update_Stats();
+      }
+
+
+function set_icon_numbers()
+    {
+
+	var icon ;
+	var iclabelcontent ;
+	var mkrIndex ;
+    var iconData = [];
+    var SVGPath = "";
+    var forecolor = "";
+    var backcolor = "";
+
+    for ( mkrIndex = 0; mkrIndex < gMarkersA.length; mkrIndex++ )
+		{
+
+	    	if (iconnumbers == "Y")
+				{ iclabelcontent = (parseInt(mkrIndex) + 1).toString(); }
+	    	else
+                { iclabelcontent = ""; }
+
+            iconData = set_mkrIcon_Details( mkrIconDets[mkrIndex]).split("~");
+            grpIndex = iconData[0];
+            SVGPath = iconData[1];
+            forecolor = iconData[2];
+            backcolor = iconData[3];
+
+            icon = build_icon_image(backcolor, SVGPath);
+
+            gMarkersA[mkrIndex].set('labelStyle', build_marker_label(forecolor));
+	    	gMarkersA[mkrIndex].set( 'labelContent', iclabelcontent );
+	    	gMarkersA[mkrIndex].set( 'labelAnchor', new google.maps.Point( parseInt(0.2*iconscale), parseInt(0.2*iconscale )));
+            gMarkersA[mkrIndex].setIcon(icon);
+
+		}
+    }
+
+    function set_mkrIcon_Details(strmkrIconData )
+    {
+        var iconData = [];
+        var grpIndex = 0;
+        var SVGPath = "";
+        var forecolor = "";
+        var backcolor = "";
+        var groupIconData = [];
+
+        iconData = strmkrIconData.split("~");
+        grpIndex = iconData[0];
+        SVGPath = iconData[1];
+        forecolor = iconData[2];
+        backcolor = iconData[3];
+
+        if (grpIndex >= 0)
+        {
+            groupIconData = grpIconDets[grpIndex].split("~");
+            if (SVGPath == "") { SVGPath = groupIconData[1]; }
+            if (forecolor == "") { forecolor = groupIconData[2]; }
+            if (backcolor == "") { backcolor = groupIconData[3]; }
+        }
+
+        if (SVGPath == "") { SVGPath = defaultSVGPath; }
+        if (forecolor == "") { forecolor = defaultforecolor; }
+        if (backcolor == "") { backcolor = defaultbackcolor; }
+
+        return grpIndex
+            + "~"
+            + SVGPath
+            + "~"
+            + forecolor
+            + "~"
+            + backcolor;
+    }
+
+
+function Update_Stats()
+      {    	
+	
+		var elem = null;
+		var workaddr = null;
+
+		bounds = map.getBounds();
+
+		var boundsNE = bounds.getNorthEast();
+		var boundsSW = bounds.getSouthWest();
+
+		var zoomlev = map.getZoom();
+
+		var elem = document.getElementById("baseaddress");
+        if (elem.innerHTML != baseloc)
+        {
+            elem.innerHTML = baseloc;
+            elem = document.getElementById("baseaddresshtml");
+            elem.innerHTML = baseloc.replace(/, /,"<BR>");
+        }
+ 
+		var elem = document.getElementById("baselatlng");
+		if ( elem.innerHTML != baselatlng )
+			{ 
+			elem.innerHTML = baselatlng ; 
+			}
+
+		elem = document.getElementById("bndne");
+        elem.innerHTML = boundsNE.lat().toFixed(latDecPlaces) + "," + boundsNE.lng().toFixed(lngDecPlaces);
+
+		elem = document.getElementById("bndsw");
+        elem.innerHTML = boundsSW.lat().toFixed(latDecPlaces) + "," + boundsSW.lng().toFixed(lngDecPlaces);
+
+		elem = document.getElementById("mkrlat");
+		elem = document.getElementById("mkrlng");
+
+		elem = document.getElementById("zoomlv");
+		if (elem.innerHTML != zoomlev)
+			{ refresh_markers(); }
+		elem.innerHTML = zoomlev;
+
+		elem = document.getElementById("maptype");
+		elem.innerHTML = maptype;
+
+		elem = document.getElementById("sbwd");
+		elem.innerHTML = sbwd;
+
+		elem = document.getElementById("iconscale");
+		elem.innerHTML = iconscale;
+
+		elem = document.getElementById("showpolys");
+		elem.innerHTML = showpolys;
+
+		elem = document.getElementById("iconnumbers");
+		elem.innerHTML = iconnumbers;
+
+		elem = document.getElementById("sborder");
+		elem.innerHTML = sborder;
+	}
+
+function MapOptionstoXML()
+	{
+		var mapoptXML= '<sbhead ';
+
+		mapoptXML+= ' initzoom="' + zoomlevel + '"';
+		mapoptXML+= ' maptype="' + maptype + '"';
+		mapoptXML+= ' sbcolwidth="' + sbwd + '"';
+		mapoptXML+= ' iconscale="' + iconscale + '"';
+		mapoptXML+= ' showpolys="' + showpolys + '"';
+		mapoptXML+= ' shownumbers="' + iconnumbers + '"';
+		mapoptXML+= ' sborder="' + sborder + '"';
+
+		var elem = document.getElementById("baseaddresshtml");
+		mapoptXML+= ' baselocation="' + elem.innerHTML + '"';
+
+		var elem = document.getElementById("baselatlng");
+		mapoptXML+= ' baselatlng="' + elem.innerHTML + '"';
+
+        mapoptXML += ' />';
+
+        alert(mapoptXML);
+	}
+   
+function UpdateType()
+      {
+	var elem = document.getElementById("maptype");
+	var type = map.getMapTypeId();
+
+      	switch(type) {
+		case google.maps.MapTypeId.ROADMAP:
+		elem.innerHTML = "G_NORMAL_MAP";
+		break;
+		case google.maps.MapTypeId.TERRAIN:
+		elem.innerHTML = "G_TERRAIN _MAP";
+		break;
+		case google.maps.MapTypeId.SATELLITE:
+          	elem.innerHTML = "G_SATELLITE_MAP";
+          	break;
+        	case google.maps.MapTypeId.HYBRID:
+          	elem.innerHTML = "G_HYBRID_MAP";
+          	break;
+        	default:
+          	elem.innerHTML = "UNKNOWN";
+      			}
+
+       }
+
+
+function Set_Map_Type(type)
+      {
+
+      	switch(type) {
+		case "G_NORMAL_MAP":
+		map.setMapTypeId(google.maps.MapTypeId.ROADMAP);
+		break;
+		case "G_TERRAIN _MAP":
+		map.setMapTypeId(google.maps.MapTypeId.TERRAIN );
+		break;
+		case "G_SATELLITE_MAP":
+		map.setMapTypeId(google.maps.MapTypeId.SATELLITE);
+          	break;
+        	case "G_HYBRID_MAP":
+		map.setMapTypeId(google.maps.MapTypeId.HYBRID );
+          	break;
+        	default:
+		map.setMapTypeId(google.maps.MapTypeId.ROADMAP);
+      			}
+	maptype = type;
+	UpdateType();
+
+       }
+
+    function sbItemclick(sbi)
+    {
+    	google.maps.event.trigger(gMarkersA[sbi],"click");
+	}
+
+    function sbGroupclick(sbi,additive)
+    {
+        var sbParts = [];
+        var grpVisiB4 = grpVisi.join("~");
+        sbParts = sbIconDets[sbi].split("~");
+        if (additive != true)
+        {
+            for (var i = 0; i < grpVisi.length; i++)
+                { grpVisi[i] = false; }
+        }
+
+        grpVisi[+sbParts[0]] = true;
+        if (grpVisi.join("~") != grpVisiB4)
+            { refresh_markers(); }
+    }
+
+
+    function sbAllclick()
+    {
+        var grpVisiB4 = grpVisi.join("~");
+
+        for (var i = 0; i < grpVisi.length; i++)
+        {
+            grpVisi[i] = true;
+        }
+        if (grpVisi.join("~") != grpVisiB4)
+            { refresh_markers(); }
+    }
+
+    function set_to_print()
+	    {
+	        RemoveRoute();	   
+	        toggle_menu();
+	        forwhat = "print";
+	        redraw_map();
+	    }
+
+
+function toggle_all_map_Controls(state)
+      {
+
+	map.setOptions(
+		{
+		mapTypeControl: state,
+		streetViewControl: state,
+		panControl: state,
+		zoomControl: state,
+		panComtrol: state
+		});
+	
+	var element = document.getElementById("WholeMenu");
+
+	if ( state != true ) 
+		{ element.style.display = "none" ;} 
+	else
+		{ element.style.display = "block" ;} 
+
+     }
+ 
+ 
+function AddControlListen()
+	{
+        
+	var defaultzoom = 16 ;
+
+	if ( initzoom == "auto" )
+		{zoomlevel = map. getZoom();}
+     
+	if ( zoomlevel > defaultzoom && initzoom == "auto" )
+		{zoomlevel = defaultzoom; }
+	
+	if ( initzoom == "auto" )
+		{initzoom = zoomlevel;}
+
+	map.setZoom(zoomlevel);
+
+	google.maps.event.addListener(map, "idle", function() 
+		{  
+		Update_Stats();
+		});
+
+	google.maps.event.addListener(map, 'maptypechanged', function() 
+		{  
+	UpdateType();
+
+	});
+
+       }
+
+   
+function get_xml_filename() 
+	{
+	if (window.location.search.substr(1).length == 0)
+		{return "Map.xml";}
+	else
+		{return window.location.search.substr(1) + '.xml';}
+	}
+
+
+function latlng_from_string(a)
+	{
+	a= a.replace("(","");
+	a= a.replace(")","");
+	var lngbit = parseFloat(a.slice(a.indexOf(",")+1));
+	var latbit = parseFloat(a.slice(0,a.indexOf(",")));
+	
+	return new google.maps.LatLng( latbit , lngbit );
+
+	}
+
+
+    function string_from__latlng(a)
+    { return a.lat().toFixed(latDecPlaces) + ", " + a.lng().toFixed(lngDecPlaces); }
+
+
+    function RemoveRoute()
+	    {
+	    infowindow.close();
+	    close_directions_panel();
+	    directionsDisplay.set('directions', null);
+	    basemarker.setVisible(false);
+	    document.getElementById("basevisible").checked=false;
+	    }
+
+    function calcRoute() 
+        {
+
+        var start = string_from__latlng( basedefaultlatlng );
+        var end  = string_from__latlng( endlatlng );
+        if (start==end)
+	    {
+	    alert("Already there!");
+	    return;
+	    }
+
+        var TravelMode;
+
+        switch(document.getElementById("TravelMode").value) 
+	    {
+	    case "WALKING":
+		    TravelMode = google.maps.TravelMode.WALKING;
+		    break;
+	    case "TRANSIT":
+		    TravelMode = google.maps.TravelMode.TRANSIT;
+		    break;
+	    case "BICYCLING":
+		    TravelMode = google.maps.TravelMode.BICYCLING;
+          	    break;
+            default:
+		    TravelMode = google.maps.TravelMode.DRIVING;;
+	    }
+
+        var request = 
+	    {
+	    origin: start,
+	    destination: end,
+	    travelMode: TravelMode,
+	    unitSystem: google.maps.UnitSystem.IMPERIAL
+	    };
+
+        directionsService.route(request, function(response, status) 
+	    {
+	    if (status == google.maps.DirectionsStatus.OK) 
+	        {
+      	        directionsDisplay.setDirections(response);
+	            basemarker.setVisible(true);
+	            document.getElementById("basevisible").checked=true;
+
+	            document.getElementById("side_bar").style.display="none";
+	            document.getElementById("close-panel").style.display="block";
+	            document.getElementById("directions-panel").style.display="block";
+    	    }
+        });
+        }
+
+
+    function Show_Base()
+        { basemarker.setVisible(document.getElementById("basevisible").checked); }
+
+    function close_directions_panel()
+    {
+	    document.getElementById("side_bar").style.display="block";
+	    document.getElementById("close-panel").style.display="none";
+	    document.getElementById("directions-panel").style.display="none";
+    }
+
+    function stripUKPostcode(address)
+    {
+        if (address.length > 2) {
+           if (address.slice(-2) == "UK") {
+                address = address.slice(0, address.length - 2).trim();
+                if (address.slice(-1) == ",") {
+                    address = address.slice(0, address.length - 1).trim();
+                }
+                if (address.length > 8) {
+                    address = address.slice(0, address.length - 8).trim() + ", " + address.slice(-8).trim();
+              }
+            }
+        }
+
+        return address
+    }
+
+    function Update_Base_Marker()
+    {
+        document.getElementById("baseaddress").value = baseloc.replace(/, /g, '\n');
+        document.getElementById("baseaddresshtml").innerHTML = baseloc.replace(/, /g, '<BR>');
+        document.getElementById("baseLatLng").value = string_from__latlng(baselatlng);
+        basemarker.setPosition(baselatlng);
+        basemarker.setVisible(true);
+        document.getElementById("basevisible").checked = true;
+    }
+
+    function BasebyCurrentMarker( mkri )
+    {
+        baselatlng = gMarkersA[mkri].position; 
+	    codeBaseLatLng( baselatlng );
+    }
+
+
+    function BaseReverttoDefault()
+    {
+    alert(baseloc + " @ " + baselatlng + "\nreverts to\l" + basedefaultloc + " @ " + basedefaultlatlng  );
+        baselatlng = basedefaultlatlng;
+	    baseloc  = basedefaultloc ;
+        Update_Base_Marker();
+    }
+
+
+    function BasebyLatLng() {
+        var strbaselatlng = document.getElementById("baseLatLng").value;    
+        var latlngStr = strbaselatlng.split(',', 2);
+        var latlng = { lat: parseFloat(latlngStr[0]), lng: parseFloat(latlngStr[1]) };
+        codeBaseLatLng( latlng );
+    }
+
+    function codeBaseLatLng(coords, callback) {
+        geocoder.geocode({ 'latLng': coords }, function (results, status) {
+            if (status == google.maps.GeocoderStatus.OK) {
+                baselatlng = results[0].geometry.location;
+                baseloc = stripUKPostcode(results[0].formatted_address);
+                Update_Base_Marker();
+            }
+            else {
+                alert("Unable to locate address of " + coords);
+                basedefaultloc = "Not Found";
+            }
+
+            // Call the callback function if it was passed. 
+            if (typeof callback == 'function')
+            { callback(status); }
+
+
+        });
+    } 
+
+
+    function BasebyAddress()
+    {
+        baseloc = document.getElementById("baseaddress").value;
+        codeBaseAddress(baseloc);
+    }
+
+
+    function codeBaseAddress(address, callback) 
+    { 
+        var workaddr = address.replace(/<BR>/ig, "\r\n");
+
+        geocoder.geocode({ 'address': workaddr }, function (results, status) {
+
+            if (status == google.maps.GeocoderStatus.OK) {
+                baselatlng = results[0].geometry.location;
+                baseloc = stripUKPostcode(results[0].formatted_address);
+                Update_Base_Marker();
+		    }
+	        else 
+		    { 
+                alert("Unable to locate base " + baseloc.replace(/, /g, '\n') + " for directions" ); 
+		    }
+          
+            // Call the callback function if it was passed. 
+            if (typeof callback == 'function') 
+		        { callback(status); } 
+
+        }); 
+    } 
+
+
+    function codeMkrAddress(address, callback)
+    { 
+
+        geocoder.geocode( { 'address': address }, function(results, status) 
+        { 
+            var xmli = -1;
+            var mkri = -2;
+            var awaiti = -1;
+
+            var lookuplatlng = new google.maps.LatLng(51.501504, -0.141916);
+            var sbParts = [];
+//alert(" codeMkrAddress countdown" + awaitingLatLngCount + "\n" + address);     
+            if (status == google.maps.GeocoderStatus.OK) 
+            {
+                lati = results[0].geometry.location.lat();
+                lngi = results[0].geometry.location.lng();
+                strlati = padNumber(lati, "0", 3, latDecPlaces);
+                strlngi = padNumber(lngi, "0", 3, lngDecPlaces);
+//alert(address + " is OK " + strlati + ", " + strlngi + "might be in " + mkrPosA.join("  ,  "));
+                mkri = mkrPosA.indexOf(strlati + ", " + strlngi);
+                if (mkri == -1)
+                {
+                    mkrPosA.push(strlati + ", " + strlngi);
+                    mkri = mkrPosA.length - 1;
+//alert(address + " being added at " +  mkrPosA[mkrPosA.length - 1]);    
+                }
+//else { alert(address + " found at mkrIndex " + mkri);   }
+            }
+//else { alert(address + " is a duff address " );    }
+
+            for (awaiti = 0; awaiti < awaitingLatLngAddr.length; awaiti++)
+            {
+                if (awaitingLatLngAddr[awaiti] == address )
+                {
+                    sbParts = sb[awaitingLatLngInd[awaiti]].split("|");
+                    if (awaitingLatLngInd[awaiti] != + sbParts[1])
+                        { alert("awaiting list is corrupt");}
+                    else
+                    {
+                        sb[awaitingLatLngInd[awaiti]] =
+                            sbParts[0]
+                            + "|"
+                            + padNumber(sbParts[1], "0", maxLabelDigits, 0 )
+                            + "|"
+                            + padNumber(mkri, "0", maxLabelDigits, 0)
+                            + "|"
+                            + sbParts[3];
+                    }
+
+                    if (mkri >= 0)
+                    {
+                        goodAddresses.push
+                            (
+                             xmlEntries[+sbParts[1]].getAttribute("label")
+                            + "~"
+                            + stripUKPostcode(results[0].formatted_address).replace(/, /g, "<BR>")
+                            + "~ marker "
+                            + mkri
+                            + "~"
+                            + +strlati
+                            + ", "
+                            + +strlngi
+                            );
+                    }
+                    else
+                    {
+                        duffAddresses.push
+                            (
+                            xmlEntries[+sbParts[1]].getAttribute("label")
+                            + "~"
+                            + address
+                            + "~ Status is: "
+                            + status
+                            );
+
+                    }
+                }
+
+            }
+            awaitingLatLngCount -= 1;
+
+          if (awaitingLatLngCount < 0)
+            { mapLoaded(); }
+
+//            alert(" from call back on " + address + " Count is " + awaitingLatLngCount + " from " + awaitingLatLngAddr.length);
+
+            // Call the callback function if it was passed. 
+            if (typeof callback == 'function') 
+		        { callback(status); } 
+
+        }); 
+    } 
+
+
+    function Create_Base_Marker()
+	{
+
+	var icon = null;
+
+	basemarker = new google.maps.Marker(
+        {
+          position: BuckHouselatlng
+		, title: "Base Location"
+		, map: map
+		}
+	);
+
+	google.maps.event.addListener(basemarker, 'click', (function(basemarker) 
+    {
+		return function() 
+        {
+
+		basemarker.html = 
+			"<div>"
+            + baseloc.replace(/, /g, "<BR>")
+            + "<BR>Lat/Lng = <BR>" + string_from__latlng(baselatlng) + "<BR>"
+			+"</div>"
+			+ " <div"
+			+  " type='button'" 
+			+ " onclick='RemoveRoute();'"			
+			+ " style='color: blue;'"
+			+ " >"
+			+ "Remove route and base marker"
+			+ "</div>";
+
+			infowindow.setContent(basemarker.html);
+			infowindow.open(map, basemarker);
+			if (forwhat == "print")
+				{
+				forwhat = "set";
+				redraw_map();
+				}
+			}
+		})(basemarker));
+
+	}
+
+
+escapeUserText_ = function (text) 
+	{
+	if (text === undefined) 
+		{
+        	return null;
+    		}
+	text = text.replace(/@/, "@@");
+	text = text.replace(/\\/, "@\\");
+	text = text.replace(/'/, "@'");
+	text = text.replace(/\[/, "@[");
+	text = text.replace(/\]/, "@]");
+	return encodeURIComponent(text);
+	}
+
+function build_icon_image( fillcolor, icontype ) 
+	{
+
+	var icon;
+
+	if (icontype.length > 4 && icontype.slice(-4) == ".svg" )
+		{
+		icon = {
+			url: icontype,
+			fillColor: fillcolor, 
+			fillOpacity: 0.8,
+			origin: new google.maps.Point(0, 0),
+			scaledSize: new google.maps.Size(parseInt(0.4*iconscale), parseInt(0.4*iconscale) ),
+			anchor: new google.maps.Point( 0.2*iconscale , 0.4*iconscale )
+			};
+
+		return icon;
+
+		}
+
+
+	switch( icontype ) 
+		{
+	     	case 'Church':
+	        	path = 'm 0,0 l 0,-25 l 23,0 l 7,-20 l 7,20 l 3,0 l 0,25 l -25,0 z';
+	        	break;
+	     	case 'Square':
+	       		path = 'm 0,0 l 0,-40 l 40,0 l 0,40 z';
+	       		break;
+	     	case 'Triangle':
+	       		path = 'm 0,0 l 20,-40 l 20,40 z';
+	       		break;
+		    case "Person":
+	       		    path = 'M 20-30c-9.8 0-17.7 7.8-17.7 17.4 0 15.5 17.7 30.6 17.7 30.6s17.7-15.4 17.7-30.6c0-9.6-7.9-17.4-17.7-17.4z';
+	        	    break;
+		    case "House":
+			    path = 'm 10,0 l 0,-20 l -10,10 l 0,-10 l 20,-20 l 20,20 l 0,10 l -10,-10 l 0,20 z'
+	        	    break;
+	     	    default:
+	        	    path = icontype
+		}
+
+	    icon = {
+		    path: path ,
+		    fillColor: fillcolor, 
+		    fillOpacity:1,
+		    scale: iconscale/100,
+		    strokeColor: '#000000',
+		    strokeWeight: 1,
+		    anchor: new google.maps.Point(20 , 0 )
+		    };
+
+	    return icon;
+
+	    }
+
+
+function build_marker_label( color )
+	{
+	
+	labstyle = 
+		{
+		    width: parseInt(0.40*iconscale) +"px",
+		    height: parseInt(0.40*iconscale) +"px",
+     		fontSize: parseInt(0.16 * iconscale) + "px",
+		    color: color
+		};
+
+    return labstyle;
+
+	}
+
+    function padNumber(a,padChar,maxIntDigits, decPlaces)
+    {
+        var numa = 0;
+        var signa = "";
+        numParts = [];
+        var intPart;
+        var decPart;
+        var strPad = padChar;
+        var i=0;
+
+        numa = +a;
+        if (numa < 0)
+        {
+            signa = "-";
+            numa = Math.abs(numa);
+        }
+
+        intPart = parseInt(numa);
+        decPart = numa - intPart;
+
+        if (browserName = "msie")
+        {
+            for (i = 1; i < maxIntDigits; i++)
+            { strPad += padChar; }
+        }
+        else
+        { strPad = padChar.repeat(maxIntDigits); }
+
+        intPart = signa + ( strPad + parseFloat(intPart)).slice(maxIntDigits * -1 );
+        if (decPart == 0)
+            { decPart = "0.0"; }
+
+        decPart = parseFloat(decPart).toFixed(decPlaces);
+        return intPart.toString() + ("" + decPart).slice(1);
+
+    }
+
+
+    function checkxmlLatLng()
+    {
+
+        var icon = null;
+        var SVGPath = null;
+        var i = 0;
+        var xmlIndex = 0;
+        var sbLegend = null;
+        var lati;
+        var lngi;
+        var strlati;
+        var strlngi;
+
+        if (xmlEntries.length < 1)
+        {
+            alert("No markers");
+            return;
+        }
+
+        var mkrIndex = 0;
+
+        var grpIndex = 0;
+        var grpNumber = 0;
+        var SVGPath = "";
+        var forecolor = "";
+        var backcolor = "";
+
+        var sblabel = "";
+
+
+        for (xmlIndex = 0; xmlIndex < xmlEntries.length; xmlIndex++) {
+            if (parseInt(xmlEntries[xmlIndex].getAttribute("sbindex")) < 0) {
+
+                if (xmlEntries[xmlIndex].getAttribute("group") == null)
+                { grpNumber = -1; }
+                else
+                { grpNumber = xmlEntries[xmlIndex].getAttribute("group"); }
+
+                if (xmlEntries[xmlIndex].getAttribute("SVGPath") == null)
+                { SVGPath = defaultSVGPath; }
+                else
+                { SVGPath = xmlEntries[xmlIndex].getAttribute("SVGPath"); }
+
+                if (xmlEntries[xmlIndex].getAttribute("forecolor") == null)
+                { forecolor = defaultforecolor; }
+                else
+                { forecolor = xmlEntries[xmlIndex].getAttribute("forecolor"); }
+
+                if (xmlEntries[xmlIndex].getAttribute("backcolor") == null)
+                { backcolor = defaultbackcolor; }
+                else
+                { backcolor = xmlEntries[xmlIndex].getAttribute("backcolor"); }
+
+                grpIconDets.push(
+                    grpNumber + "~"
+                    + SVGPath + "~"
+                    + forecolor + "~"
+                    + backcolor
+                );
+
+                grpVisi.push(true);
+
+                mkrIndex = -1;
+            }
+            else
+            {
+                mkrIndex = -99;
+                if (xmlEntries[xmlIndex].getAttribute("LatLng") != null) {
+                    lati = +(xmlEntries[xmlIndex].getAttribute("LatLng").slice(0, xmlEntries[xmlIndex].getAttribute("LatLng").indexOf(","))) || 0;
+                    lngi = +(xmlEntries[xmlIndex].getAttribute("LatLng").slice(xmlEntries[xmlIndex].getAttribute("LatLng").indexOf(",") + 1, xmlEntries[xmlIndex].getAttribute("LatLng").length)) || 0;
+                }
+                else
+                {
+                    lati = +xmlEntries[xmlIndex].getAttribute("lat") || 0;
+                    lngi = +xmlEntries[xmlIndex].getAttribute("lng") || 0;
+                }
+
+                if (lati < -90 || lati > 90 || lati == 0
+                    || lngi < -180 || lngi > 180 || lngi == 0) {
+                    if (xmlEntries[xmlIndex].getAttribute("address") != null
+                        && xmlEntries[xmlIndex].getAttribute("address") != "") {
+//alert(xmlEntries[xmlIndex].getAttribute("address"))
+                        awaitingLatLngInd.push(xmlIndex);
+                        awaitingLatLngAddr.push(xmlEntries[xmlIndex].getAttribute("address").replace(/<BR>/ig, ", "));
+//strAlert = awaitingLatLngAddr.join("\n");
+//alert(strAlert + "\n\nadding: " + awaitingLatLngAddr[awaitingLatLngAddr.length - 1]);
+//strAlert = "";
+                    }
+                }
+                else {
+                    strlati = padNumber(lati, "0", 3, latDecPlaces);
+                    strlngi = padNumber(lngi, "0", 3, lngDecPlaces);
+//strAlert = mkrPosA.join("\n");
+//alert(strAlert + "\nlooking at " + strlati + ", " + strlngi + " at xmlIndex " + xmlIndex + " " + xmlEntries[xmlIndex].getAttribute("label") );
+//strAlert = "";
+
+                    mkrIndex = mkrPosA.indexOf(strlati + ", " + strlngi);
+                    if (mkrIndex == -1) {
+                        mkrPosA.push(strlati + ", " + strlngi);
+                        mkrIndex = mkrPosA.length - 1;
+//alert("adding " + mkrPosA[mkrPosA.length - 1]);
+                    }
+                }
+            }
+
+            if (xmlEntries[xmlIndex].getAttribute("label") == null || xmlEntries[xmlIndex].getAttribute("label") == "" )
+            {
+                sblabel = "UNKNOWN element " + xmlIndex;
+                xmlEntries[xmlIndex].setAttribute("label", "UNKNOWN element " + xmlIndex);
+            }
+            else
+            { sblabel = xmlEntries[xmlIndex].getAttribute("label");  }
+                
+
+            sb.push(
+                sblabel
+                + "|"
+                + padNumber(xmlIndex, "0", maxLabelDigits, 0)
+                + "|"
+                + padNumber(mkrIndex, "0", maxLabelDigits, 0)
+                );
+
+            sba.push(
+                sblabel
+                + "|"
+                + padNumber(xmlIndex, "0", maxLabelDigits, 0)
+                + "|"
+                + padNumber(mkrIndex, "0", maxLabelDigits, 0)
+                );
+
+            sbm.push(
+                padNumber(mkrIndex, "0", maxLabelDigits, 0) + "    " + sblabel
+                + "|"
+                + padNumber(xmlIndex, "0", maxLabelDigits, 0)
+                + "|"
+                + padNumber(mkrIndex, "0", maxLabelDigits, 0)
+            );
+
+            if (xmlEntries[xmlIndex].getAttribute("sortkeys") != null)
+            {
+                sbs.push(
+                    xmlEntries[xmlIndex].getAttribute("sortkeys")
+                    + "|"
+                    + padNumber(xmlIndex, "0", maxLabelDigits, 0)
+                    + "|"
+                    + padNumber(mkrIndex, "0", maxLabelDigits, 0)
+                );
+            }
+            else
+            {
+                sbs.push(
+                    ""
+                    + "|"
+                    + padNumber(xmlIndex, "0", maxLabelDigits, 0)
+                    + "|"
+                    + padNumber(mkrIndex, "0", maxLabelDigits, 0)
+                );           
+            }
+//strAlert += sb.length - 1 + " is " + sb[sb.length -1] + "\n";
+        }
+//alert(strAlert);
+//strAlert = "";
+//strAlert = awaitingLatLngAddr.join("\n");
+//alert("The addresses to locate have now been assembled\n" + strAlert + "\n** end**");
+//strAlert = "";
+
+        awaitingLatLngCount = awaitingLatLngAddr.length -1;
+//alert("checkxmlLatLng addresses for lookup:\n" + awaitingLatLngAddr.join("\n\n"));
+        if (awaitingLatLngCount < 0 )
+        {
+//alert("calling from checkxmlLatLng");
+            mapLoaded();
+        }
+        else
+        {
+            for (i = 0; i < awaitingLatLngAddr.length; i++)
+            { codeMkrAddress(awaitingLatLngAddr[i]);}
+        }
+    }
+
+
+    function buildMarkers() {
+        var mkri = 0;
+        var xmli = 0;
+        var sbParts = [];
+        var mkrpos;
+        var soFar;
+        /*
+        sbParts[0] = xmlEntries[xmlIndex].getAttribute("label")
+        sbParts[1] = xmlIndex
+        sbParts[2] = mkrIndex
+        */
+        for (xmli = 0; xmli < sb.length; xmli++)
+        {
+            sbParts = sb[xmli].split("|");
+            if (+(sbParts[2]) >= 0) {
+                sbXRef.push(
+                      sbParts[2]
+                    + "~"
+                    + sbParts[1]);
+//strAlert += "  ,  " + sbXRef[sbXRef.length - 1] 
+//alert("sbXRef adding " +  sbXRef[sbXRef.length - 1] + " -> " + sb[+sbParts[1]] + " @ " + mkrPosA[+sbParts[2]]);
+            }
+            var grpIndex = 0;
+            var SVGPath = "";
+            var forecolor = "";
+            var backcolor = "";
+            var iconData = [];
+
+            grpIndex = -1;
+            if (xmlEntries[xmli].getAttribute("group") != null) {
+                for (grpIndex = 0; grpIndex < grpIconDets.length; grpIndex++) {
+                    if ( +grpIconDets[grpIndex].slice(0, grpIconDets[grpIndex].indexOf("~")) == +xmlEntries[xmli].getAttribute("group"))
+                    { break; }
+                }
+                if (grpIndex >= grpIconDets.length)
+                    { grpIndex = -1 }
+            }
+
+            if (xmlEntries[xmli].getAttribute("SVGPath") == null)
+            { SVGPath = ""; }
+            else { SVGPath = xmlEntries[xmli].getAttribute("SVGPath"); }
+
+            if (xmlEntries[xmli].getAttribute("forecolor") == null)
+            { forecolor = ""; }
+            else
+            { forecolor = xmlEntries[xmli].getAttribute("forecolor"); }
+
+            if (xmlEntries[xmli].getAttribute("backcolor") == null)
+            { backcolor = "~"; }
+            else
+            { backcolor = xmlEntries[xmli].getAttribute("backcolor") }
+
+            sbIconDets.push(
+                grpIndex
+                + "~"
+                + SVGPath
+                + "~"
+                + forecolor
+                + "~"
+                + backcolor
+            );
+        }
+
+//alert("Unsorted sbXRef " + sbXRef.length + " of sb " + sb.length + "  " + strAlert + "**end**");
+//strAlert = "";
+
+        sbXRef.sort();
+//alert(sbXRef.join(" , "));
+        if (mkrPosA.length > 0) {
+            sbParts = mkrPosA[0].split(", ");
+            mkrpos = new google.maps.LatLng(
+                  parseFloat(sbParts[0])
+                , parseFloat(sbParts[1]));
+            bounds = new google.maps.LatLngBounds(mkrpos, mkrpos);
+        }
+        else
+        { mkrpos = new google.maps.LatLng(51.501504, -0.141916); }
+
+        bounds = new google.maps.LatLngBounds(mkrpos, mkrpos);
+ 
+        for (mkri = 0; mkri < mkrPosA.length; mkri++)
+            { xmli = build_actual_marker(mkri); }
+	}
+
+
+    function build_actual_marker(mkrIndex)
+	{
+
+    var labnums;
+    var icom = null;
+    var xmlIndex = -99;
+    var sbindex = [];
+    var XRefParts = [];
+    var strPosParts = [];
+    var lastSVGPath = "";
+    var sbParts = [];
+    var groupiconData = [];
+    var mkrIdentifier = "";
+    var i = 0;
+/*
+    XRefParts[0] is mkrIndex
+    XRefParts[1] is xmlIndex
+*/
+
+    do
+    {
+        lastSVGPath = "";
+
+//alert(Xrefsofar);
+        XRefParts = sbXRef[Xrefsofar].split("~");
+//alert("XRef candidate " + mkrIndex + " mkrIndex " + XRefParts[0] + " xmlIndex " + XRefParts[1] );
+        if (+XRefParts[0] == mkrIndex)
+        {
+            xmlIndex = +XRefParts[1];
+//alert("First XRef match " + sbXRef[Xrefsofar]);
+            for (Xrefsofar = Xrefsofar; Xrefsofar < sbXRef.length; Xrefsofar++)
+            {
+                XRefParts = sbXRef[Xrefsofar].split("~");
+                if (+XRefParts[0] != mkrIndex)
+                    { break; }
+
+                sbParts = sb[parseInt(XRefParts[1])].split("|");
+
+                mkrIdentifier +=
+                "<div><strong>"
+                + sbParts[0]
+                + "</strong>";
+
+                if (xmlEntries[xmlIndex].getAttribute("mkrinfo") != null)
+                    { mkrIdentifier += xmlEntries[xmlIndex].getAttribute("mkrinfo"); }   
+
+                mkrIdentifier += "</div>";
+ 
+//alert( mkrIdentifier )
+//alert("XRef match "  +  sbXRef[Xrefsofar]);
+//strAlert = sb[parseInt(XRefParts[1])]
+
+                sb[parseInt(XRefParts[1])] =
+                    sbParts[0]
+                    + "|"
+                    + sbParts[1]
+                    + "|"
+                    + padNumber(mkrIndex, "0", maxLabelDigits, 0)
+                    + "|"
+                    + sbParts[3];
+
+                sba[parseInt(XRefParts[1])] =
+                    sbParts[0]
+                    + "|"
+                    + sbParts[1]
+                    + "|"
+                    + padNumber(mkrIndex, "0", maxLabelDigits, 0)
+                    + "|"
+                    + sbParts[3];
+
+                sbs[parseInt(XRefParts[1])] =
+                    sbParts[0]
+                    + "|"
+                    + sbParts[1]
+                    + "|"
+                    + padNumber(mkrIndex, "0", maxLabelDigits, 0)
+                    + "|"
+                    + sbParts[3];
+
+                sbm[parseInt(XRefParts[1])] =
+                    padNumber(mkrIndex, "0", maxLabelDigits, 0) + "    " + sbParts[0]
+                    + "|"
+                    + sbParts[1]
+                    + "|"
+                    + padNumber(mkrIndex, "0", maxLabelDigits, 0)
+                    + "|"
+                    + sbParts[3];
+
+//if (strAlert != sb[parseInt(XRefParts[1])])
+//    { alert(strAlert + "changed to " + sb[parseInt(XRefParts[1])]); }
+//strAlert = "";
+
+            }
+        break;
+        }
+        else
+            { break; }
+    } while ( Xrefsofar < sbXRef.length )
+
+//alert(xmlIndex + " was first at " + mkrIndex);
+ 
+    if ( xmlIndex < 0 )
+    {
+        alert("Xref entry for " + mkrIndex + " of " + sbXRef.length + " is missing" );
+            return -1;
+    }
+
+    if (iconnumbers == "Y")
+        { labnums = parseInt( mkrIndex ) + 1 ;}
+
+    sbParts = sb[xmlIndex].split("|");
+
+    strPosParts = mkrPosA[mkrIndex].split(", ");
+
+    mkrpos = new google.maps.LatLng(
+          parseFloat(strPosParts[0])
+        , parseFloat(strPosParts[1]));
+
+		bounds.extend( mkrpos);
+
+        mkrIconDets.push( sbIconDets[xmlIndex] );
+
+//alert("Collecting marker attribute:\n" + xmlEntries[xmlIndex].getAttribute("label") + "\n" + mkrIconDets[mkrIconDets.length - 1]);
+        iconData = set_mkrIcon_Details( mkrIconDets[mkrIconDets.length - 1] ).split("~");
+        SVGPath = iconData[1] 
+        forecolor = iconData[2] 
+        backcolor = iconData[3] 
+
+        labstyle = build_marker_label(forecolor);        
+
+        if (SVGPath != lastSVGPath || lastSVGPath == "" )
+        {
+            icon = build_icon_image(backcolor, SVGPath);
+            lastSVGPath = SVGPath
+        }
+
+        {
+            if (icon != null)
+            {
+                if (icon.fillColor != backcolor)
+                    { icon.fillColor = backcolor; }
+                 else
+                    { icon = build_icon_image(backcolor, SVGPath); }
+            }
+        }
+
+    	marker = new MarkerWithLabel(
+            {
+            draggable: true,
+            bouncy: true,
+        	position: mkrpos ,
+			icon: icon , 
+       		labelContent: labnums.toString(),
+			labelClass: "labels",
+			labelStyle: labstyle,
+			labelAnchor: new google.maps.Point(parseInt(0.20*iconscale), parseInt(0.20*iconscale)),
+        	map: map
+		});
+
+
+        marker.html = "";
+
+        if ( xmlEntries[xmlIndex].getAttribute("infobeforelabel") != null )
+            { marker.html += xmlEntries[xmlIndex].getAttribute("infobeforelabel"); }
+        else
+            { marker.html += "<div>"; }
+
+        marker.html += mkrIdentifier;
+ 
+        if (xmlEntries[xmlIndex].getAttribute("address") != null)
+            { marker.html += xmlEntries[xmlIndex].getAttribute("address").replace(/, /g, "<BR>"); }
+
+        //alert(xmlEntries[xmlIndex].getAttribute("infoafteraddress"));
+        if (xmlEntries[xmlIndex].getAttribute("infoafteraddress") != null) {
+            marker.html +=
+                "<div>"
+                + xmlEntries[xmlIndex].getAttribute("infoafteraddress")
+                + "</div>";
+        }
+
+        marker.html +=
+            " <div>"
+            + "Lat/Lng = <BR>" + string_from__latlng(mkrpos)
+            + "</div>"
+            + "<div"
+            + " type='button'"
+            + " onclick='endlatlng=new google.maps.LatLng(" + string_from__latlng(mkrpos) + ");calcRoute();'"
+            + " style='color: blue;'"
+            + " >"
+                + "Directions"
+            + "</div>"
+            + " <a"
+            + " style='color: red;'"
+            + " href=" + "'javascript:BasebyCurrentMarker(" + mkrIndex + ");'"
+            + ">"
+                + "Set as base"
+            + "</a>"
+
+
+        marker.html += "</div>";
+//alert(marker.html);
+
+        google.maps.event.addListener(marker, 'click', (function (marker, mkrIndex)
+        {
+            return function () {
+                var r;
+                var txt;
+                var i = marker.html.indexOf("Lat/Lng = <BR>") + "Lat/Lng = <BR>".length;
+                var j = marker.html.indexOf("<", i) ;
+                var newpos =
+                    marker.getPosition().lat().toFixed(latDecPlaces)
+                    + ", "
+                    + marker.getPosition().lng().toFixed(lngDecPlaces);
+                var oldpos = marker.html.slice(i, j).split(",");
+                var oldposcoords = new google.maps.LatLng(oldpos[0], oldpos[1]);
+
+                if (oldpos != newpos)
+                {
+                    r = confirm(
+                        "You have moved the marker from\n"
+                        + oldpos
+                        + "\nAre you happy with it's new position at\n"
+                        + newpos);
+                    if (r == true)
+                    {
+                        marker.html =
+                            marker.html.slice(0, i)
+                            + newpos
+                            + marker.html.slice(j, marker.html.length)
+                            ;
+                    }
+                    else
+                    {
+                        marker.setPosition(oldposcoords);
+                        map.panTo(oldposcoords);                       
+                    }
+                }
+
+
+                
+                infowindow.setContent(marker.html);
+                infowindow.open(map, marker);
+                if (forwhat == "print")
+                {
+                    forwhat = "set";
+                    redraw_map();
+                }
+            }
+        })(marker, mkrIndex));
+
+		gMarkersA.push(marker);
+        return gMarkersA.length;
+	}
+
+
+    function build_polygons() 
+	    {
+
+	        var strokeColor = 0;
+	        var strokeOpacity = 1;
+	        var strokeWeight = 4;
+	        var fillColor = 0;
+	        var fillOpacity = 0.3;
+
+	        var mypoly;
+                var pts = [];
+
+	        pts.push(new google.maps.LatLng(0,0));
+	        pts.push(new google.maps.LatLng(0,0));
+
+                for (var a = 0; a < xmlPolygons.length; a++) 
+	        {
+
+            	    var points = xmlPolygons[a].getElementsByTagName("point");
+            	    pts = [];
+
+            	    for (var b = 0; b < points.length; b++) 
+		    {
+               	        pts.push (new google.maps.LatLng(parseFloat(points[b].getAttribute("lat")),
+                                       parseFloat(points[b].getAttribute("lng"))));
+            	    }
+
+               	    pts.push (new google.maps.LatLng(parseFloat(points[0].getAttribute("lat")),
+                         	          parseFloat(points[0].getAttribute("lng"))));
+
+		    if ( xmlPolygons[a].getAttribute("strokecolor") != null )
+		        { strokeColor = xmlPolygons[a].getAttribute("strokecolor"); }
+
+		    if ( xmlPolygons[a].getAttribute("strokeopacity") != null )
+		        { strokeOpacity = xmlPolygons[a].getAttribute("strokeopacity"); }
+
+		    if ( xmlPolygons[a].getAttribute("strokeweight") != null )
+		        { strokeWeight = xmlPolygons[a].getAttribute("strokeweight"); }
+
+		    if ( xmlPolygons[a].getAttribute("fillcolor") != null )
+		        { fillColor = xmlPolygons[a].getAttribute("fillcolor"); }
+
+		    if ( xmlPolygons[a].getAttribute("fillOpacity") != null )
+		        { fillOpacity = xmlPolygons[a].getAttribute("fillOpacity"); }
+
+  		    mypoly = new google.maps.Polygon({
+    			    paths: pts,
+    			    strokeColor: strokeColor,
+    			    strokeOpacity: parseFloat(strokeOpacity),
+    			    strokeWeight: parseFloat(strokeWeight),
+    			    fillColor: fillColor,
+    			    fillOpacity: parseFloat(fillOpacity)
+			      });
+
+		    gPolygonsA.push( mypoly );
+
+	        }
+
+
+	    }
+
+
+
+    function build_sidebar( sb, sborder ) 
+    {
+	    var side_bar_html="";
+	    var sbParts = [];
+	    var mkrIndex ;
+        var xmlIndex;
+
+        var iconData = [];
+        var SVGPath = "";
+        var forecolor = "";
+        var backcolor = "";
+
+        var entryHTML = "";
+
+        if (sborder == "N")
+        {
+            side_bar_html =
+            '<a style="color:#000000; background-color:#ffffff; text-decoration:none;"'
+            + ' href="javascript:sbAllclick()">'
+            + 'All Entries [' + parseInt(sb.length - grpIconDets.length) + '] for markers [' + gMarkersA.length + ']'
+            + '</a>'
+            + '<BR>'
+                ;
+        }
+
+        for (var i = 0; i < sb.length; i++)
+        {
+            sbParts = sb[i].split("|");
+
+            xmlIndex = parseInt(sbParts[1]);
+            mkrIndex = parseInt(sbParts[2]);
+
+            iconData = set_mkrIcon_Details(sbIconDets[xmlIndex]).split("~");
+
+            SVGPath = iconData[1];
+            forecolor = iconData[2];
+            backcolor = iconData[3];
+
+            if (mkrIndex >= 0) 
+            {
+                entryHTML =
+                    '<span style="color:#000000; background-color:#ffffff; text-decoration:none; font-family: monospace; font-size: 10pt;" >'
+                    + padNumber(mkrIndex + 1, " ", maxLabelDigits, 0).replace(/ /g, "&nbsp;") + '.'
+                    + '</span>'
+                    + '<a style="color:'
+                    + forecolor
+                    + '; background-color:'
+                    + backcolor
+                    + '; text-decoration:none;"'
+                    + ' href="javascript:sbItemclick(' + mkrIndex + ')">'
+                    + xmlEntries[xmlIndex].getAttribute("label")
+                    + '</a>'
+                    + '<BR>'
+                    ;
+            }       
+            else
+            {
+                if (+xmlEntries[xmlIndex].getAttribute("sbindex") < 0)
+                {
+                    if (sborder == "N")
+                    {
+                        entryHTML =
+                        '<a style="color:'
+                        + forecolor
+                        + '; background-color:'
+                        + backcolor
+                        + '; text-decoration:none;"'
+                        + ' href="javascript:sbGroupclick(' + xmlIndex + ', false)">'
+                        + xmlEntries[xmlIndex].getAttribute("label")
+                        + '</a>'
+                        + '<BR>'
+                            ;
+                    }
+                }
+                else
+                {
+                    entryHTML =
+                    '<span style="color:'
+                    + forecolor
+                    + '; background-color:'
+                    + backcolor
+                    + '; text-decoration:none;">'
+                    + xmlEntries[xmlIndex].getAttribute("label")
+                    + '</span>'
+                    + '<BR>'
+                        ;
+                }
+            }
+
+            if (parseInt(xmlEntries[xmlIndex].getAttribute("sbindex")) >= 0 || sborder == "N")
+                { side_bar_html += entryHTML; }
+
+	    }
+	    return side_bar_html;
+    }
+
+
+    function downloadUrl(url,callback) 
+    { 
+        var request = window.ActiveXObject ? new ActiveXObject('Microsoft.XMLHTTP') :
+        new XMLHttpRequest; 
+        request.onreadystatechange = function() 
+	    {   
+	    if (request.readyState == 4) 
+	        {     
+	        request.onreadystatechange = doNothing;
+	        callback(request.responseText, request.status);
+	        } 
+	    }; 
+        request.open('GET', url, true); 
+        request.send(null);
+    }
+
+
+    function parseXML( xml ) 
+    {
+	    if( window.ActiveXObject && window.GetObject ) 
+	    {
+		    var dom = new ActiveXObject( 'Microsoft.XMLDOM' );
+		    dom.loadXML( xml );
+		    return dom;
+	    }
+	    if( window.DOMParser )
+		    return new DOMParser().parseFromString( xml, 'text/xml' );
+		    throw new Error( 'No XML parser available' );
+    }
+
+
+
+    function doNothing() {}
+
+
+    function readxmldata(fname) 
+        {
+
+        downloadUrl(fname, function(doc) 
+	        {
+
+	        if (doc)
+                { parseDoc(doc);}
+	        else
+	            {alert("No file " + fname);}
+	        });
+
+        }
+
+    function parseDoc(doc)
+    {
+        xmlDoc = parseXML(doc);
+
+        sbhead = xmlDoc.documentElement.getElementsByTagName("sbhead");
+        xmlEntries = xmlDoc.documentElement.getElementsByTagName("sbentry");
+        xmlPolygons = xmlDoc.documentElement.getElementsByTagName("polygon");
+
+        if (sbhead.length > 0) {
+
+            if (sbhead[0].getAttribute("iconscale") != null)
+            { iconscale = parseFloat(sbhead[0].getAttribute("iconscale")); }
+            if (sbhead[0].getAttribute("showpolys") != null)
+            { showpolys = sbhead[0].getAttribute("showpolys"); }
+            if (sbhead[0].getAttribute("shownumbers") != null)
+            { iconnumbers = sbhead[0].getAttribute("shownumbers"); }
+            if (sbhead[0].getAttribute("shadows") != null)
+            { shadows = sbhead[0].getAttribute("shadows"); }
+            if (sbhead[0].getAttribute("sborder") != null)
+            { sborder = sbhead[0].getAttribute("sborder"); }
+            if (sbhead[0].getAttribute("maptype") != null)
+            { maptype = sbhead[0].getAttribute("maptype"); }
+            if (sbhead[0].getAttribute("initzoom") != null)
+            { initzoom = sbhead[0].getAttribute("initzoom"); }
+            if (sbhead[0].getAttribute("forwhat") != null)
+            { forwhat = sbhead[0].getAttribute("forwhat"); }
+            if (sbhead[0].getAttribute("defaultSVGPath") != null)
+            { defaultSVGPath = sbhead[0].getAttribute("defaultSVGPath"); }
+            if (sbhead[0].getAttribute("defaultforecolor") != null)
+            { defaultforecolor = sbhead[0].getAttribute("defaultforecolor"); }
+            if (sbhead[0].getAttribute("defaultbackcolor") != null)
+            { defaultbackcolor = sbhead[0].getAttribute("defaultbackcolor"); }
+            if (forwhat != "print") {
+                if (sbhead[0].getAttribute("sbcolwidth") != null)
+                { headsbwd = sbhead[0].getAttribute("sbcolwidth"); }
+                if (parseInt(headsbwd) > 75)
+                { sbwd = "20%"; }
+                else
+                { sbwd = headsbwd; }
+
+                document.getElementById("mapcell").style.width = 100 - parseInt(sbwd) + "%";
+                document.getElementById("sbcol").style.display = "block";
+                if (forwhat == "set" && xmlEntries.length > 1)
+                { forwhat = "N"; }
+            }
+            else {
+                sbwd = 0;
+            }
+            if (sbhead[0].getAttribute("bounds") != null)
+            { headbounds = eval(sbhead[0].getAttribute("bounds")); }
+            else
+            { headbounds = null; }
+
+        }
+
+        maxLabelDigits = ('' + (parseInt(xmlEntries.length + 1))).length;
+
+        if ( xmlEntries.length > 0 )
+            {  checkxmlLatLng(); }
+
+    }
+
+
+    function mapLoaded()
+    {
+        var element = document.getElementById('iconscalein');
+	    element.value = iconscale;
+
+        Create_Base_Marker();
+        if (sbhead[0].getAttribute("baselocation") != null && sbhead[0].getAttribute("baselatlng") != null) {
+            baseloc = sbhead[0].getAttribute("baselocation").replace(/<BR>/ig, ", ");
+            baselatlng = latlng_from_string(sbhead[0].getAttribute("baselatlng"));
+            basedefaultloc = baseloc;
+            basedefaultlatlng = baselatlng;
+            Update_Base_Marker();
+        }
+        else {
+            if (sbhead[0].getAttribute("baselocation") != null) {
+                baseloc = sbhead[0].getAttribute("baselocation").replace(/<BR>/ig, ", ");
+                basedefaultloc = baseloc;
+                if (sbhead[0].getAttribute("baselatlng") == null)
+                { codeBaseAddress(baseloc); }
+                else {
+                    baselatlng = latlng_from_string(sbhead[0].getAttribute("baselatlng"));
+                    basedefaultlatlng = baselatlng;
+                    codeBaseLatLng(baselatlng);
+                }
+            }
+        }
+
+        if (headbounds != null)
+        { bounds = headbounds; }
+        else {
+            if (baselatlng != BuckHouselatlng)
+            { bounds = new google.maps.LatLngBounds(baselatlng, baselatlng); }
+        }
+
+	    buildMarkers();
+	    build_polygons(); 
+       
+	    sbhtml = build_sidebar( sb, "N" );
+
+	    sba.sort();
+        sbahtml = build_sidebar(sba, "A");
+
+
+        sbs.sort();
+        sbshtml = build_sidebar(sbs, "S");
+
+        sbm.sort;
+        sbmhtml = build_sidebar(sbm, "M");
+
+	    cenpos = bounds.getCenter();
+	    map.setCenter(cenpos);
+
+	    if (initzoom == "auto" || initzoom == "bounds")
+	        { myFitBounds(map, bounds); } 
+	    else
+	        { zoomlevel = parseInt(initzoom); }
+
+	    var maptype = map.getMapTypeId();
+
+
+        set_sborder("N");
+
+	    maxzoom = 19;
+	    change_sidebar_width(-1);
+
+        var element = document.getElementById('WholeMenu');
+	    map.controls[google.maps.ControlPosition.TOP_RIGHT].push(element);
+	    basemarker.setVisible(false);
+	    document.getElementById("basevisible").checked=false;
+
+	    google.maps.event.addListenerOnce(map, 'bounds_changed', function()
+		    {
+		    AddControlListen();
+		    });
+
+	    document.getElementById('TravelMode').value="DRIVING"
+
+    }
+
+
+     </script>
+</head>
+<body onload="load()" style="height:97%; width:99.8%; vertical-align:top; margin:0px; ">
+    <table id="maptable" border="0" style="height:100%; width:100%; vertical-align:top; margin:0px; z-Index:1; " >
+        <tr>
+            <td id="mapcell" style="vertical-align:top; height:100%; margin:0px;">
+                <div id="map_canvas" style="vertical-align:top; height:100%; margin:0px; ">
+                </div>
+            </td>
+            <td id="sbcol" style="vertical-align:top; height:100%; margin:0px;" >
+                <!-- =========== side_bar with scroll bar ================ -->
+                <div id="side_bar" style="overflow:auto; height: 648px; margin: 0px; "></div>
+                <!-- ============================================= -->
+
+                <div class="htmlControl htmlButton" id="close-panel" style="display:none; ">
+                    <span style="float:left">
+                        <strong>Mode:</strong>
+                        <select id="TravelMode" onchange="calcRoute();">
+                            <option value="DRIVING">by Car</option>
+                            <option value="WALKING">on Foot</option>
+                            <option value="TRANSIT">by Public Transport</option>
+                            <option value="BICYCLING">by Bicycle</option>
+                        </select>
+                    </span>
+                    <span class="htmlControl htmlButton" onclick="close_directions_panel();"
+                          style="color:white;
+		                    background-color:red;
+		                    font-weight:bolder;
+		                    float:right; ">
+                                        X
+                    </span>
+                </div>
+                <div class="panel" id="directions-panel" style="display:none;"></div>
+            </td>
+        </tr>
+    </table>
+
+	    <span id="bndne" style="display:none">51.0, 51.0</span>
+	    <span id="bndsw" style="display:none">51.0, 51.0</span>
+	    <span id="zoomlv" style="display:none">14</span>
+	    <span id="maptype" style="display:none">G_NORMAL_MAP</span>
+	    <span id="sbwd"  style="display:none">20%</span>
+	    <span id="iconscale"  style="display:none">50</span>
+	    <span id="showpolys"  style="display:none">Y</span>
+	    <span id="iconnumbers"  style="display:none">Y</span>
+	    <span id="shadows"  style="display:none">N</span>
+	    <span id="sborder"  style="display:none">N</span>
+	    <span id="mkrlat"  style="display:none">54</span>
+	    <span id="mkrlng"  style="display:none">-3</span>
+	    <span id="baselatlng"  style="display:none">51,-3</span>
+	    <span id="baseaddresshtml"  style="display:none">an address</span>
+
+
+    <div id= "WholeMenu" class="htmlControl" style="width:400px; background-color:transparent; " >
+	    <div class="htmlControl htmlButton"   style=" font-size: 9pt; float: right; z-Index:2; " 	id="menuButton"  onclick = "toggle_menu()" title = "Click to open Options menu">Show menu</div>	
+	    <div class="htmlControl" id= "Menublock" style="width:398px; background-color:transparent; " >
+		    <div id="menuPanel" style="display:none">
+			    <div class="htmlControl htmlButton" id="iconnumbersbtn" onclick = "toggle_icon_numbers()" style="clear: both ;" >
+				    <span style="font-weight:bold">Hide</span> numbers in markers
+			    </div>
+			    <div class="htmlControl htmlButton" id="polygonsbtn" onclick = "toggle_polygons()" >
+				    <span style="font-weight:bold">Hide</span> polygons
+			    </div>
+              
+                <div class="htmlControl htmlButton">
+                    <span style="float:left;">Sidebar Order:</span>
+                    <span class="htmlControl htmlButton" id="btnNatural" onclick="set_sborder('N')">Natural</span>
+                    <span class="htmlControl htmlButton" id="btnAlpha" onclick="set_sborder('A')">Alpha</span>
+                    <span class="htmlControl htmlButton" id="btnSort" onclick="set_sborder('S')">Sort</span>
+                    <span class="htmlControl htmlButton" id="btnMkr" onclick="set_sborder('M')">Marker</span>
+                </div>                
+
+			    <div class="htmlControl htmlButton">
+				    <span style="float:left; width: 125px" >Sidebar width</span> 
+                    <span class="htmlControl htmlButton" id="sbwddec4btn" onclick = "change_sidebar_width(-4)" style="font-weight:bold"> --  </span>
+  
+                    <span class="htmlControl htmlButton" id="sbwddecbtn" onclick = "change_sidebar_width(-1)" style="font-weight:bold">  -  </span>
+			  
+                    <span class="htmlControl htmlButton" id="sbwdincbtn" onclick = "change_sidebar_width(1)" style="font-weight:bold">  +  </span>
+  
+                    <span class="htmlControl htmlButton" id="sbwdinc4btn" onclick = "change_sidebar_width(4)" style="font-weight:bold"> ++ </span>
+			    </div>
+
+			    <div class="htmlControl htmlButton">
+                    <div>
+                        <span class="htmlControl htmlButton" id="seticonsize" style=" float:left; width:293px; " onclick = "change_icon_number_size(document.getElementById('iconscalein').value);" >Click to set Icon Size to:</span>
+	                    <input type="text" name="iconscalein" id="iconscalein" maxlength="3" size="3" >
+
+	                    <select name="iconscalesel" id="iconscalesel" onchange= "select_Icon_size(document.getElementById('iconscalesel').value)">
+		                    <option value=-1>custom</option value=>
+		                    <option value=25>25</option value=>
+		                    <option value=50>50</option value=>
+		                    <option value=75>75</option value=>
+		                    <option value=100>100</option>
+		                    <option value=125>125</option>
+		                    <option value=150>150</option>
+		                    <option value=175>175</option>
+		                    <option value=200>200</option>
+	                    </select>
+
+                    </div>
+		
+			    </div>
+
+			    <div class="htmlControl htmlButton" style=" float:left; width:297px; ">
+                    <div class="htmlControl htmlButton" style="font-weight:bold; float:left; width:295px; text-align: center;" >Set base for Directions</div>
+                    <div style=" float:left; width:290px; ">
+                        <span class="htmlControl htmlButton" id="basebydefault" onclick = "BaseReverttoDefault();" >Revert to default</span>
+                        <span class="htmlControl htmlOther" >    Show Base:
+                            <input type="checkbox"  id="basevisible" onclick = "Show_Base();">
+                        </span>  
+                    </div>
+                    <div class="htmlControl htmlButton" id="basebyaddress" style=" float:left; width:293px; " onclick = "BasebyAddress();" >Click here to set Base Address to:</div>
+                    <textarea class="htmlControl htmlButton" id="baseaddress" rows="4" style=" float:left; width:270px; " ></textarea>
+                    <div class="htmlControl htmlButton" id="basebyLatLng" style=" float:left; width:293px; " onclick="BasebyLatLng();">Click here to set Base Lat/Lng to:</div>
+                    <textarea class="htmlControl htmlButton" id="baseLatLng" rows="1" style=" float:left; width:270px; "></textarea>
+
+			    </div>
+
+                <div class="htmlControl htmlButton" id="mapoptXMLbtn" onclick = "MapOptionstoXML();" style="line-height:100%;float:left;  width:293px; ">Show Options as XML header</div>
+			    <div class="htmlControl htmlButton" id="printerButton" onclick="set_to_print();" style="line-height:100%; float:left;  width:293px; ">View Printer friendly page<BR>
+                    <div class="htmlControl htmlOther" style="line-height:100%;">Click any marker to return</div>
+			    </div>
+
+                <div class="htmlControl htmlButton" id="ShowAddressesFound" onclick="showAddressesFound();" style="line-height:100%;float:left;  width:293px; ">Show Addresses Found</div>
+                <div class="htmlControl htmlButton" id="ShowAddressesNotFound" onclick="showAddressesNotFound();" style="line-height:100%;float:left;  width:293px; ">Show Addresses Not Found</div>
+                <div class="htmlControl htmlButton" id="ShowAllAddresses" onclick="ShowAllAddresses();" style="line-height:100%;float:left;  width:293px; ">Show All Addresses</div>
+                <div class="htmlControl htmlButton" id="ShowSideBar" onclick="set_sborder(sborder);"y style="line-height:100%;float:left;  width:293px; ">Show Sidebar</div>
+
+		    </div>
+	    </div>
+    </div>
+
+</body>
+</html>

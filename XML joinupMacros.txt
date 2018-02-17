@@ -1,0 +1,74 @@
+Sub XMLMap()
+'
+' XMLMap Macro
+'
+'
+Dim sText As String
+Dim r As Long
+
+Selection.TypeText "jsXML = " & "<sbentries>"
+
+With Selection
+    .Collapse Direction:=wdCollapseEnd
+    .InsertFile FileName:="D:\HMC Map\HMCHeader.xml", Link:=True
+    .InsertParagraphAfter
+End With
+
+sText = GetText("D:\HMC Map\HMC.xml")
+
+Selection.TypeText Mid(sText, InStr(sText, "<sbentries>") + Len("<sbentries>"), Len(sText) - Len("</sbentries>"))
+
+    Selection.Find.ClearFormatting
+    
+    Selection.Find.Replacement.ClearFormatting
+    With Selection.Find
+        .Text = "<"
+        .Replacement.Text = Chr$(39) + "<"
+        .Forward = True
+        .Wrap = wdFindContinue
+        .Format = False
+        .MatchCase = False
+        .MatchWholeWord = False
+        .MatchWildcards = False
+        .MatchSoundsLike = False
+        .MatchAllWordForms = False
+    End With
+    Selection.Find.Execute Replace:=wdReplaceAll
+
+    With Selection.Find
+        .Text = ">"
+        .Replacement.Text = ">" & Chr$(39) & vbCrLf _
+                & " + " & Chr$(39) & " " & Chr$(39) & vbCrLf _
+                & Chr$(43) & " "
+        .Forward = True
+        .Wrap = wdFindContinue
+        .Format = False
+        .MatchCase = False
+        .MatchWholeWord = False
+        .MatchWildcards = False
+        .MatchSoundsLike = False
+        .MatchAllWordForms = False
+    End With
+    Selection.Find.Execute Replace:=wdReplaceAll
+    
+Selection.TypeText Chr$(39) & " " & Chr$(39)
+
+ActiveDocument.SaveAs2 "D:\HMC Map\Map.js", wdFormatText
+End Sub
+
+Function GetText(sFile As String) As String
+   Dim nSourceFile As Integer, sText As String
+
+   ''Close any open text files
+   Close
+
+   ''Get the number of the next free text file
+   nSourceFile = FreeFile
+
+   ''Write the entire file to sText
+   Open sFile For Input As #nSourceFile
+   sText = Input$(LOF(1), 1)
+   Close
+
+   GetText = sText
+End Function
