@@ -5,21 +5,24 @@
       <xs:sequence>
         <xs:element name="sbhead">
           <xs:complexType>
-            <xs:attribute name="iconscale" type="xs:unsignedByte" use="required" />
-            <xs:attribute name="sbcolwidth" type="xs:string" use="required" />
+	    <xs:attribute name="iconscale" type="xs:unsignedByte" use="required" />
             <xs:attribute name="showpolys" type="xs:string" use="required" />
             <xs:attribute name="shownumbers" type="xs:string" use="required" />
             <xs:attribute name="sborder" type="xs:string" use="required" />
-            <xs:attribute name="initzoom" type="xs:string" use="required" />
             <xs:attribute name="maptype" type="xs:string" use="required" />
-            <xs:attribute name="baselocation" type="xs:string" use="required" />
-            <xs:attribute name="baselatlng" type="xs:string" use="required" />
+            <xs:attribute name="initzoom" type="xs:string" use="required" />
             <xs:attribute name="forwhat" type="xs:string" use="required" />
+            <xs:attribute name="defaultSVGPath" type="xs:string" use="required" />
+            <xs:attribute name="defaultforecolor" type="xs:string" use="required" />
+            <xs:attribute name="defaultbackcolor" type="xs:string" use="required" />
+            <xs:attribute name="sbcolwidth" type="xs:string" use="required" />
+            <xs:attribute name="baselocation" type="xs:string" use="required" />
+            <xs:attribute name="baselatlng" type="xs:decimal" use="required" />
           </xs:complexType>
         </xs:element>
         <xs:element maxOccurs="unbounded" name="sbentry">
           <xs:complexType>
-            <xs:attribute name="infobeforelabel" type="xs:string" use="optional" />
+	    <xs:attribute name="infobeforelabel" type="xs:string" use="optional" />
             <xs:attribute name="label" type="xs:string" use="required" />
             <xs:attribute name="forecolor" type="xs:string" use="required" />
             <xs:attribute name="backcolor" type="xs:string" use="required" />

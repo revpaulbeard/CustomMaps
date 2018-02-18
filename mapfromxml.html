@@ -268,7 +268,6 @@ return browserName ;
     var iconscale = 50;
     var iconnumbers = "Y";
     var showpolys = "Y";
-    var shadows = "Y";
     var sborder = "X";
     var maptype = "G_NORMAL_MAP";
     var forwhat = "N";
@@ -2218,8 +2217,6 @@ function build_marker_label( color )
             { showpolys = sbhead[0].getAttribute("showpolys"); }
             if (sbhead[0].getAttribute("shownumbers") != null)
             { iconnumbers = sbhead[0].getAttribute("shownumbers"); }
-            if (sbhead[0].getAttribute("shadows") != null)
-            { shadows = sbhead[0].getAttribute("shadows"); }
             if (sbhead[0].getAttribute("sborder") != null)
             { sborder = sbhead[0].getAttribute("sborder"); }
             if (sbhead[0].getAttribute("maptype") != null)
@@ -2250,11 +2247,6 @@ function build_marker_label( color )
             else {
                 sbwd = 0;
             }
-            if (sbhead[0].getAttribute("bounds") != null)
-            { headbounds = eval(sbhead[0].getAttribute("bounds")); }
-            else
-            { headbounds = null; }
-
         }
 
         maxLabelDigits = ('' + (parseInt(xmlEntries.length + 1))).length;
@@ -2292,12 +2284,10 @@ function build_marker_label( color )
             }
         }
 
-        if (headbounds != null)
-        { bounds = headbounds; }
-        else {
-            if (baselatlng != BuckHouselatlng)
+
+        if (baselatlng != BuckHouselatlng)
             { bounds = new google.maps.LatLngBounds(baselatlng, baselatlng); }
-        }
+
 
 	    buildMarkers();
 	    build_polygons(); 
@@ -2390,7 +2380,6 @@ function build_marker_label( color )
 	    <span id="iconscale"  style="display:none">50</span>
 	    <span id="showpolys"  style="display:none">Y</span>
 	    <span id="iconnumbers"  style="display:none">Y</span>
-	    <span id="shadows"  style="display:none">N</span>
 	    <span id="sborder"  style="display:none">N</span>
 	    <span id="mkrlat"  style="display:none">54</span>
 	    <span id="mkrlng"  style="display:none">-3</span>
