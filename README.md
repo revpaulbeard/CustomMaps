@@ -12,4 +12,6 @@ This HTML/JavaScript application takes data from a file "Map.js"  and draws mark
 MS Excel
 A macro-enabled MS Excel spreadsheet may be used to prepare the data for the XML file in a user-friendly way. An example is contained in the file "MapXMLExample.xlsm"
 
+XML joinup.docm
 
+A macro-enabled MS Word Document which uses a macro to merge files MapXMLHeader.xml and Map/xml to create  a Javascript file called Map.js for inclusion in mapfromjsxml.html
