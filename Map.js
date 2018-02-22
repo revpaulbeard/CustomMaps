@@ -4,16 +4,16 @@ jsXML = '<sbentries>'
  + ' '
 + 
 
-	'<sbentry label="Group 1" forecolor="#000000" backcolor="#ffffff" group="0" sbindex="-1" SVGPath="Person"/>'
+	'<sbentry label="Italians" sbindex="-1" group="1" forecolor="#ffffff" backcolor="#000000" SVGPath="Person"/>'
  + ' '
 + 
-	'<sbentry label="Frankie and Jonnie Armadillo" forecolor="" backcolor="" group="0" sbindex="1" infoafteraddress="01234 567890  fussball@pigsblabber.com " address="Buckingham Palace, London, "/>'
+	'<sbentry label="Frankie and Jonnie Armadillo" address="Buckingham Palace, London, " infoafteraddress="01234 567890  fussball@pigsblabber.com " sbindex="1" group="1"/>'
  + ' '
 + 
-	'<sbentry label="Group 2" forecolor="#ffffff" backcolor="#0000ff" group="1" sbindex="-1" SVGPath="Church"/>'
+	'<sbentry label="Churches" sbindex="-1" group="2" forecolor="#ffffff" backcolor="#0000ff" SVGPath="Church"/>'
  + ' '
 + 
-	'<sbentry label="BS Methodist Church" forecolor="" backcolor="" group="1" sbindex="2" LatLng="52.2233, -0.26687" infoafteraddress="01480 454665 07777 777777  Speciality Pastries" address="10 Berkley Street, St Neots, Cambridgeshire, PE19 2NB"/>'
+	'<sbentry infobeforelabel="Name:" label="BS Methodist Church" address="10 Berkley Street, St Neots, Cambridgeshire, PE19 2NB" infoafteraddress="01480 454665 07777 777777  Speciality Pastries" sbindex="2" group="2"/>'
  + ' '
 + 
 '</sbentries>'

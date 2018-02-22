@@ -215,13 +215,14 @@ return browserName ;
     var geocoder = null;
     var directionsDisplay;
     var directionsService = new google.maps.DirectionsService();
-    var baseloc = "Buckingham Palace";
-    var baselatlng = new google.maps.LatLng(51.501504, -0.141916);
-    var basedefaultloc = "Buckingham Palace";
-    var basedefaultlatlng = new google.maps.LatLng(51.501504, -0.141916);
-    var basemarker = null;
-    var endlatlng = new google.maps.LatLng(51.501504, -0.141916);
     var BuckHouselatlng = new google.maps.LatLng(51.501504, -0.141916);
+    var BuckHouseloc = "Buckingham Palace";
+    var baseloc = BuckHouseloc;
+    var baselatlng = BuckHouselatlng;
+    var basedefaultloc = BuckHouseloc;
+    var basedefaultlatlng = BuckHouselatlng;
+    var basemarker = null;
+    var endlatlng = BuckHouselatlng;
 
     var strAlert="";
     var latDecPlaces = 4;
@@ -229,10 +230,8 @@ return browserName ;
 
     var duffAddresses = [];
     var goodAddresses = [];
-
     var awaitingLatLngInd = [];
     var awaitingLatLngAddr= [];
-
     var gMarkersA = [];
     var gPolygonsA = [];
     var xmlPolygons = [];
@@ -260,11 +259,9 @@ return browserName ;
     var mapsize;
     var cenpos = null;
     var zoomlevel = null;
-
-
     var initzoom = "auto";
     var headsbwd = "20%";
-    var sbwd = "0px" ;
+    var sbwd = "20%" ;
     var iconscale = 50;
     var iconnumbers = "Y";
     var showpolys = "Y";
@@ -286,27 +283,27 @@ function load()
 
 	geocoder = new google.maps.Geocoder();
 
-	var initlatlng = new google.maps.LatLng(53,0);
+    var initlatlng = BuckHouselatlng;
   	var mapOptions = 
 	{
 	zoom: 10,
 	center: new google.maps.LatLng(-37.92, 151.25),
-    	mapTypeControlOptions: {
+    mapTypeControlOptions:
+    {
         style: google.maps.MapTypeControlStyle.HORIZONTAL_BAR,
         position: google.maps.ControlPosition.TOP_CENTER},
-	mapTypeId: google.maps.MapTypeId.ROADMAP
+	    mapTypeId: google.maps.MapTypeId.ROADMAP
   	}
 
 	map = new google.maps.Map(document.getElementById("map_canvas"), mapOptions );
-
-	toggle_all_map_Controls( true );
-
    	var rendererOptions = 	{
 		map: map,
       		suppressMarkers: true
     	}
 	directionsDisplay = new google.maps.DirectionsRenderer(rendererOptions);
   	directionsDisplay.setPanel(document.getElementById('directions-panel'));
+    toggle_all_map_Controls(true);
+    Create_Base_Marker();
 
 	if  (window.addEventListener)
 		{ window.addEventListener("resize", function() { fit_map_to_window(); } , false); }
@@ -1032,7 +1029,7 @@ function latlng_from_string(a)
 	}
 
 
-    function string_from__latlng(a)
+    function string_from_latlng(a)
     { return a.lat().toFixed(latDecPlaces) + ", " + a.lng().toFixed(lngDecPlaces); }
 
 
@@ -1048,8 +1045,8 @@ function latlng_from_string(a)
     function calcRoute() 
         {
 
-        var start = string_from__latlng( basedefaultlatlng );
-        var end  = string_from__latlng( endlatlng );
+        var start = string_from_latlng( basedefaultlatlng );
+        var end  = string_from_latlng( endlatlng );
         if (start==end)
 	    {
 	    alert("Already there!");
@@ -1128,7 +1125,7 @@ function latlng_from_string(a)
     {
         document.getElementById("baseaddress").value = baseloc.replace(/, /g, '\n');
         document.getElementById("baseaddresshtml").innerHTML = baseloc.replace(/, /g, '<BR>');
-        document.getElementById("baseLatLng").value = string_from__latlng(baselatlng);
+        document.getElementById("baseLatLng").value = string_from_latlng(baselatlng);
         basemarker.setPosition(baselatlng);
         basemarker.setVisible(true);
         document.getElementById("basevisible").checked = true;
@@ -1165,15 +1162,12 @@ function latlng_from_string(a)
                 Update_Base_Marker();
             }
             else {
-                alert("Unable to locate address of " + coords);
+                alert("Unable to locate the address of the Base Marker at\n" + coords + "\nfor directions");
                 basedefaultloc = "Not Found";
             }
-
             // Call the callback function if it was passed. 
             if (typeof callback == 'function')
             { callback(status); }
-
-
         });
     } 
 
@@ -1198,7 +1192,7 @@ function latlng_from_string(a)
 		    }
 	        else 
 		    { 
-                alert("Unable to locate base " + baseloc.replace(/, /g, '\n') + " for directions" ); 
+                alert("Unable to locate the Base Marker with address:\n" + baseloc.replace(/, /g, '\n') + "\nfor directions" ); 
 		    }
           
             // Call the callback function if it was passed. 
@@ -1324,7 +1318,7 @@ function latlng_from_string(a)
 		basemarker.html = 
 			"<div>"
             + baseloc.replace(/, /g, "<BR>")
-            + "<BR>Lat/Lng = <BR>" + string_from__latlng(baselatlng) + "<BR>"
+            + "<BR>Lat/Lng = <BR>" + string_from_latlng(baselatlng) + "<BR>"
 			+"</div>"
 			+ " <div"
 			+  " type='button'" 
@@ -1919,11 +1913,11 @@ function build_marker_label( color )
 
         marker.html +=
             " <div>"
-            + "Lat/Lng = <BR>" + string_from__latlng(mkrpos)
+            + "Lat/Lng = <BR>" + string_from_latlng(mkrpos)
             + "</div>"
             + "<div"
             + " type='button'"
-            + " onclick='endlatlng=new google.maps.LatLng(" + string_from__latlng(mkrpos) + ");calcRoute();'"
+            + " onclick='endlatlng=new google.maps.LatLng(" + string_from_latlng(mkrpos) + ");calcRoute();'"
             + " style='color: blue;'"
             + " >"
                 + "Directions"
@@ -2209,8 +2203,8 @@ function build_marker_label( color )
         xmlEntries = xmlDoc.documentElement.getElementsByTagName("sbentry");
         xmlPolygons = xmlDoc.documentElement.getElementsByTagName("polygon");
 
-        if (sbhead.length > 0) {
-
+        if (sbhead.length > 0)
+        {
             if (sbhead[0].getAttribute("iconscale") != null)
             { iconscale = parseFloat(sbhead[0].getAttribute("iconscale")); }
             if (sbhead[0].getAttribute("showpolys") != null)
@@ -2231,29 +2225,48 @@ function build_marker_label( color )
             { defaultforecolor = sbhead[0].getAttribute("defaultforecolor"); }
             if (sbhead[0].getAttribute("defaultbackcolor") != null)
             { defaultbackcolor = sbhead[0].getAttribute("defaultbackcolor"); }
-            if (forwhat != "print") {
+            if (forwhat != "print")
+            {
                 if (sbhead[0].getAttribute("sbcolwidth") != null)
                 { headsbwd = sbhead[0].getAttribute("sbcolwidth"); }
                 if (parseInt(headsbwd) > 75)
                 { sbwd = "20%"; }
                 else
                 { sbwd = headsbwd; }
-
-                document.getElementById("mapcell").style.width = 100 - parseInt(sbwd) + "%";
-                document.getElementById("sbcol").style.display = "block";
-                if (forwhat == "set" && xmlEntries.length > 1)
-                { forwhat = "N"; }
             }
-            else {
-                sbwd = 0;
+            else { sbwd = 0; }
+            if (sbhead[0].getAttribute("baselocation") != null && sbhead[0].getAttribute("baselatlng") != null)
+            {
+                baseloc = sbhead[0].getAttribute("baselocation").replace(/<BR>/ig, ", ");
+                baselatlng = latlng_from_string(sbhead[0].getAttribute("baselatlng"));
+                basedefaultloc = baseloc;
+                basedefaultlatlng = baselatlng;
+            }
+            else
+            {
+                if (sbhead[0].getAttribute("baselocation") != null)
+                {
+                    baseloc = sbhead[0].getAttribute("baselocation").replace(/<BR>/ig, ", ");
+                    basedefaultloc = baseloc;
+                    if (sbhead[0].getAttribute("baselatlng") == null)
+                    { codeBaseAddress(baseloc); }
+                    else
+                    {
+                        baselatlng = latlng_from_string(sbhead[0].getAttribute("baselatlng"));
+                        basedefaultlatlng = baselatlng;
+                        codeBaseLatLng(baselatlng);
+                    }
+                }
             }
         }
-
+        Update_Base_Marker();
+        document.getElementById("mapcell").style.width = 100 - parseInt(sbwd) + "%";
+        document.getElementById("sbcol").style.display = "block";
+        if (forwhat == "set" && xmlEntries.length > 1)
+            { forwhat = "N"; }
         maxLabelDigits = ('' + (parseInt(xmlEntries.length + 1))).length;
-
         if ( xmlEntries.length > 0 )
-            {  checkxmlLatLng(); }
-
+            { checkxmlLatLng(); }
     }
 
 
@@ -2262,32 +2275,8 @@ function build_marker_label( color )
         var element = document.getElementById('iconscalein');
 	    element.value = iconscale;
 
-        Create_Base_Marker();
-        if (sbhead[0].getAttribute("baselocation") != null && sbhead[0].getAttribute("baselatlng") != null) {
-            baseloc = sbhead[0].getAttribute("baselocation").replace(/<BR>/ig, ", ");
-            baselatlng = latlng_from_string(sbhead[0].getAttribute("baselatlng"));
-            basedefaultloc = baseloc;
-            basedefaultlatlng = baselatlng;
-            Update_Base_Marker();
-        }
-        else {
-            if (sbhead[0].getAttribute("baselocation") != null) {
-                baseloc = sbhead[0].getAttribute("baselocation").replace(/<BR>/ig, ", ");
-                basedefaultloc = baseloc;
-                if (sbhead[0].getAttribute("baselatlng") == null)
-                { codeBaseAddress(baseloc); }
-                else {
-                    baselatlng = latlng_from_string(sbhead[0].getAttribute("baselatlng"));
-                    basedefaultlatlng = baselatlng;
-                    codeBaseLatLng(baselatlng);
-                }
-            }
-        }
-
-
         if (baselatlng != BuckHouselatlng)
             { bounds = new google.maps.LatLngBounds(baselatlng, baselatlng); }
-
 
 	    buildMarkers();
 	    build_polygons(); 
