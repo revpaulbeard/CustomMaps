@@ -5,14 +5,17 @@
       <xs:sequence>
         <xs:element maxOccurs="unbounded" name="sbentry">
           <xs:complexType>
+	    <xs:attribute name="picThumbref" type="xs:string" use="optional" />
+	    <xs:attribute name="infobeforelabel" type="xs:string" use="optional" />
             <xs:attribute name="label" type="xs:string" use="required" />
-            <xs:attribute name="forecolor" type="xs:string" use="required" />
-            <xs:attribute name="backcolor" type="xs:string" use="required" />
-            <xs:attribute name="group" type="xs:unsignedByte" use="required" />
-            <xs:attribute name="sbindex" type="xs:short" use="required" />
-            <xs:attribute name="LatLng" type="xs:string" use="optional" />
-            <xs:attribute name="infoafteraddress" type="xs:string" use="optional" />
             <xs:attribute name="address" type="xs:string" use="optional" />
+            <xs:attribute name="infoafteraddress" type="xs:string" use="optional" />
+            <xs:attribute name="LatLng" type="xs:string" use="optional" />
+            <xs:attribute name="sortkeys" type="xs:string" use="optional" />
+            <xs:attribute name="sbindex" type="xs:integer" use="required" />
+            <xs:attribute name="group" type="xs:integer" use="required" />
+            <xs:attribute name="forecolor" type="xs:string" use="optional" />
+            <xs:attribute name="backcolor" type="xs:string" use="optional" />
             <xs:attribute name="SVGPath" type="xs:string" use="optional" />
           </xs:complexType>
         </xs:element>
